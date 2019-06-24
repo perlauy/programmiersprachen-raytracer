@@ -9,15 +9,15 @@ Sphere::Sphere() :
   radius_{1.f}
 {}
 
-Sphere::Sphere(glm::vec3 const& center, unsigned float radius) :
+Sphere::Sphere(glm::vec3 const& center, float radius) :
   center_{center},
   radius_{radius}
 {}
 
-float Sphere::area() const override {
-  return 4 * M_PI * std::pow(radius,2);
+float Sphere::area() const {
+  return 4 * M_PI * std::pow(radius_,2);
 }
 
-float Sphere::volume() const override {
-  return 4 * M_PI * std::pow(radius,3) / 3;
+float Sphere::volume() const {
+  return 4 * M_PI * std::pow(radius_,3) / 3;
 }

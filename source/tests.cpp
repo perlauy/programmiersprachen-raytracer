@@ -1,8 +1,8 @@
 #define CATCH_CONFIG_RUNNER
 #define _USE_MATH_DEFINES
 
-#include "sphere.hpp"
-#include "box.hpp"
+#include <sphere.hpp>
+#include <box.hpp>
 
 #include <catch.hpp>
 #include <cmath>
@@ -22,10 +22,10 @@ TEST_CASE ("box", "[box]")
 {
   Box bx0{};
   Box bx1{{-10.f, -10.f, 10.f}, {5.f, 0.f, 20.f}};
-  REQUIRE (bx0.area() == Approx());
-  REQUIRE (bx0.volume() == Approx());
-  REQUIRE (bx1.area() == Approx());
-  REQUIRE (bx1.volume() == Approx());
+  REQUIRE (bx0.area() == Approx(6));
+  REQUIRE (bx0.volume() == Approx(1));
+  REQUIRE (bx1.area() == Approx(800));
+  REQUIRE (bx1.volume() == Approx(1500));
 }
 
 int main(int argc, char *argv[])

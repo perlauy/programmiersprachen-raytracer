@@ -20,5 +20,6 @@ add_executable(tests
   tests.cpp)
 target_link_libraries(tests
   ${GLFW_LIBRARIES}
+  ${FRAMEWORK_NAME}
   )
 

@@ -13,12 +13,15 @@ class Box : public Shape {
 
     // User-defined constructor
     Box(glm::vec3 const& minimum, glm::vec3 const& maximum);
-
+    
+    float area() const override;
+    float volume() const override;
+    
   private:
     glm::vec3 minimum_;
     glm::vec3 maximum_;
 
-}
+};
 
 
 #endif

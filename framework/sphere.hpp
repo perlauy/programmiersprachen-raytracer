@@ -12,12 +12,15 @@ class Sphere : public Shape {
     Sphere();
 
     // User-defined constructor
-    Sphere(glm::vec3 const& center, unsigned float radius);
+    Sphere(glm::vec3 const& center, float radius);
+
+    float area() const override;
+    float volume() const override;
 
   private:
     glm::vec3 center_;
-    unsigned float radius_;
+    float radius_;
 
-}
+};
 
 #endif
