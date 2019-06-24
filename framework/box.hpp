@@ -2,8 +2,10 @@
 #define BOX_HPP
 
 #include "shape.hpp"
+#include "color.hpp"
 
 #include <glm/vec3.hpp>
+#include <string>
 
 class Box : public Shape {
 
@@ -12,7 +14,7 @@ class Box : public Shape {
     Box();
 
     // User-defined constructor
-    Box(glm::vec3 const& minimum, glm::vec3 const& maximum);
+    Box(std::string name, Color color, glm::vec3 const& minimum, glm::vec3 const& maximum);
     
     float area() const override;
     float volume() const override;

@@ -1,7 +1,9 @@
 #define _USE_MATH_DEFINES
 
 #include "sphere.hpp"
+#include "color.hpp"
 #include <cmath>
+#include <string>
 
 
 Sphere::Sphere() :
@@ -9,7 +11,7 @@ Sphere::Sphere() :
   radius_{1.f}
 {}
 
-Sphere::Sphere(glm::vec3 const& center, float radius) :
+Sphere::Sphere(std::string name, Color color, glm::vec3 const& center, float radius) :
   center_{center},
   radius_{radius}
 {}
