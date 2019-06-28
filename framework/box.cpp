@@ -9,7 +9,8 @@ Box::Box() :
   maximum_{1.f,1.f,1.f}
 {}
 
-Box::Box(std::string name, Color color, glm::vec3 const& minimum, glm::vec3 const& maximum) :
+Box::Box(std::string name, Color color, glm::vec3 const& minimum, glm::vec3 const& maximum) : 
+  Shape(name, color),
   minimum_{minimum},
   maximum_{maximum}
 {}

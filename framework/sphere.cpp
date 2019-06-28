@@ -11,7 +11,8 @@ Sphere::Sphere() :
   radius_{1.f}
 {}
 
-Sphere::Sphere(std::string name, Color color, glm::vec3 const& center, float radius) :
+Sphere::Sphere(std::string name, Color color, glm::vec3 const& center, float radius) : 
+  Shape(name, color),
   center_{center},
   radius_{radius}
 {}

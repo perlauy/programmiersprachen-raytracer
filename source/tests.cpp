@@ -6,7 +6,7 @@
 
 #include <catch.hpp>
 #include <cmath>
-
+#include <iostream>
 
 TEST_CASE ("sphere", "[sphere]")
 {
@@ -28,7 +28,13 @@ TEST_CASE ("box", "[box]")
   REQUIRE (bx1.volume() == Approx(1500));
 }
 
+
 int main(int argc, char *argv[])
 {
+  Sphere sp{"SPHERE", {0.f,0.f,1.f}, {-10.f, -10.f, 10.f}, 5.f};
+  Box bx{"BOX", {1.f,0.f,0.f}, {-10.f, -10.f, 10.f}, {5.f, 0.f, 20.f}};
+  std::cout << sp << std::endl;
+  std::cout << bx << std::endl;
+
   return Catch::Session().run(argc, argv);
 }

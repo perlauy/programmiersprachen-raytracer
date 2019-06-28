@@ -12,3 +12,13 @@ Shape::Shape(std::string name, Color color) :
   name_{name},
   color_{color}
 {}
+
+std::ostream& Shape::print(std::ostream& os) const {
+  os << "Shape: " << name_;
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, Shape const& s) {
+  std::ostream::sentry const cerberus(os);
+  return cerberus ? s.print(os) : os;
+}
