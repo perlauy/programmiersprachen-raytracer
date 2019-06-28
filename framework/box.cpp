@@ -27,3 +27,8 @@ float Box::area() const {
 float Box::volume() const {
   return (maximum_[0] - minimum_[0]) * (maximum_[1] - minimum_[1]) * (maximum_[2] - minimum_[2]);
 }
+
+std::ostream& Box::print(std::ostream& os) const {
+  os << "Box: " << name_;
+  return os;
+}

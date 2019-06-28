@@ -24,3 +24,9 @@ float Sphere::area() const {
 float Sphere::volume() const {
   return 4 * M_PI * std::pow(radius_,3) / 3;
 }
+
+std::ostream& Sphere::print(std::ostream& os) const {
+  os << "Sphere: " << name_;
+  return os;
+}
+
