@@ -4,6 +4,7 @@
 #include <sphere.hpp>
 #include <box.hpp>
 
+#include <memory>
 #include <catch.hpp>
 #include <cmath>
 #include <iostream>
@@ -35,6 +36,13 @@ int main(int argc, char *argv[])
   Box bx{"BOX", {1.f,0.f,0.f}, {-10.f, -10.f, 10.f}, {5.f, 0.f, 20.f}};
   std::cout << sp << std::endl;
   std::cout << bx << std::endl;
+
+  Color red{255, 0, 0};
+  glm::vec3 position{0.0f, 0.0f, 0.0f};
+  std::shared_ptr<Sphere> s1 = std::make_shared<Sphere>("sphere0", red, position, 1.2f);
+  std::shared_ptr<Shape> s2 = std::make_shared<Sphere>("sphere1", red, position, 1.2f);
+  s1->print(std::cout);
+  s2->print(std::cout);
 
   return Catch::Session().run(argc, argv);
 }
