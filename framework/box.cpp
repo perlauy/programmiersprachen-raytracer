@@ -29,6 +29,7 @@ float Box::volume() const {
 }
 
 std::ostream& Box::print(std::ostream& os) const {
-  os << "Box: " << name_;
+  Shape::print(os);
+  os << "Type: Box";
   return os;
 }

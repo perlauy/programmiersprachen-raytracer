@@ -73,3 +73,4 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/framework)
 add_subdirectory(framework)
 
 add_subdirectory(source)
+add_subdirectory(tests)

@@ -1,0 +1,13 @@
+#ifndef BUW_RAY_HPP
+#define BUW_RAY_HPP
+
+#include <iostream>
+#include <glm/vec3.hpp>
+
+struct Ray
+{
+  glm::vec3 origin = {0.0f, 0.0f, 0.0f};
+  glm::vec3 direction = {0.0f, 0.0f, -1.0f};
+};
+
+#endif //#define RAY_HPP
