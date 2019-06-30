@@ -184,4 +184,9 @@ class Derived : public Base
 
 ## Aufgabe 5.9
 ### Class hierarchy vs. Object hierarchy
+Class hierarchy refers to classes inheriting and being derived from others. This is part of the program design. But at run-time, once objects are instantiated, there is no real hierarchy.
+Object hierarchy refers to the structure of data inside each object; an object of certain type may contain data as objects of another type, and so on. So there is a certain "hierarchy" in the way the data is structured.
 ### Class diagram vs. Object diagram
+A Class Diagram will show what the Objects in your system consist of (members) and what they are capable of doing (methods). -> Design stage
+In contrast, an Object Diagram will show how objects in your system are interacting with each other at some point in time, and what values those objects contain when the program is in this state. -> Run-time
+(https://stackoverflow.com/questions/19282748/what-is-the-difference-between-a-class-diagram-vs-an-object-diagram)
