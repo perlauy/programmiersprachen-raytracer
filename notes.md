@@ -137,6 +137,51 @@ The *contextual* keyword `override` helps to clarify the developer's intent (not
 ## Aufgabe 5.7
 ### Static vs Dynamic type from a variable
 
+## Destructor
+If the destructor of the base class is not virtual, then the derived class should not have secondary structures and resources for the freestore, since their destructor could not be called.
+As with the other member functions, if not declared virtual, the destructor of the static type will be called. So in the following case, the derived destructor (which may delete additional data) could not be called:
+
+```
+class Base 
+{
+    // some virtual methods
+};
+
+class Derived : public Base
+{
+    ~Derived()
+    {
+        // Do some important cleanup
+    }
+};
+
+Base *b = new Derived();
+// use b
+delete b; // Here's the problem!
+
+```
+
+Overriding a destructor:
+```
+class Base 
+{
+  public:
+    // some methods...
+    virtual ~Base() {}
+};
+
+class Derived : public Base
+{
+    ~Derived() override
+    {
+        // ...
+    }
+};
+
+```
+(https://stackoverflow.com/questions/461203/when-to-use-virtual-destructors)
+
+
 ## Aufgabe 5.9
 ### Class hierarchy vs. Object hierarchy
 ### Class diagram vs. Object diagram
