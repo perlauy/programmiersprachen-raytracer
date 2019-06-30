@@ -11,6 +11,7 @@
 #include <glm/gtx/intersect.hpp>
 
 Sphere::Sphere() :
+  Shape(),
   center_{0.f,0.f,0.f},
   radius_{1.f}
 {}
@@ -31,7 +32,8 @@ float Sphere::volume() const {
 
 std::ostream& Sphere::print(std::ostream& os) const {
   Shape::print(os);
-  os << "Type: Sphere";
+  os << "Type: Sphere\n";
+  os << "Center: (" << center_[0] << ", " << center_[1] << ", " << center_[2] << ")" << "\tRadius: " << radius_ << "\n";
   return os;
 }
 

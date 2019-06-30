@@ -29,6 +29,16 @@ TEST_CASE ("box", "[box]")
   REQUIRE (bx1.volume() == Approx(1500));
 }
 
+TEST_CASE ("raycast", "[raycast]")
+{
+  Box bx0{};
+  Box bx1{"BOX", {1.f,0.f,0.f}, {-10.f, -10.f, 10.f}, {5.f, 0.f, 20.f}};
+  REQUIRE (bx0.area() == Approx(6));
+  REQUIRE (bx0.volume() == Approx(1));
+  REQUIRE (bx1.area() == Approx(800));
+  REQUIRE (bx1.volume() == Approx(1500));
+}
+
 
 int main(int argc, char *argv[])
 {

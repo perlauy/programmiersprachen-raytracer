@@ -5,6 +5,7 @@
 
 
 Box::Box() :
+  Shape(),
   minimum_{0.f,0.f,0.f},
   maximum_{1.f,1.f,1.f}
 {}
@@ -30,6 +31,7 @@ float Box::volume() const {
 
 std::ostream& Box::print(std::ostream& os) const {
   Shape::print(os);
-  os << "Type: Box";
+  os << "Type: Box\n";
+  os << "Minimum: (" << minimum_[0] << ", " << minimum_[1] << ", " << minimum_[2] << ")\tMaximum: (" << maximum_[0] << ", " << maximum_[1] << ", " << maximum_[2] << ")\n";
   return os;
 }
