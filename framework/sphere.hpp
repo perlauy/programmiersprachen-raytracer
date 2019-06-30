@@ -17,6 +17,7 @@ class Sphere : public Shape {
 
     // User-defined constructor
     Sphere(std::string name, Color color, glm::vec3 const& center, float radius);
+    ~Sphere();
 
     float area() const override;
     float volume() const override;

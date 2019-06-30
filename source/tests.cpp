@@ -81,6 +81,18 @@ TEST_CASE ("raycast", "[raycast]")
 
 }
 
+TEST_CASE ("virtual", "[virtual]")
+{
+  Color red{255, 0, 0};
+  glm::vec3 position{0.0f, 0.0f, 0.0f};
+  Sphere* s1 = new Sphere {"sphere0", red, position, 1.2f};
+  Shape* s2 = new Sphere {"sphere1", red, position, 1.2f};
+  s1->print(std::cout);
+  s2->print(std::cout);
+  delete s1;
+  delete s2;
+}
+
 int main(int argc, char *argv[])
 {
   Sphere sp{"SPHERE", {0.f,0.f,1.f}, {-10.f, -10.f, 10.f}, 5.f};

@@ -4,9 +4,9 @@
 #include "color.hpp"
 #include "hit_point.hpp"
 #include "ray.hpp"
-#include <cmath>
-#include <string>
 
+#include <cmath>
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 
@@ -14,13 +14,16 @@ Sphere::Sphere() :
   Shape(),
   center_{0.f,0.f,0.f},
   radius_{1.f}
-{}
+{ std::cout << "Constructor SPHERE" << std::endl; }
 
 Sphere::Sphere(std::string name, Color color, glm::vec3 const& center, float radius) : 
   Shape(name, color),
   center_{center},
   radius_{radius}
-{}
+{ std::cout << "Constructor SPHERE" << std::endl; }
+
+Sphere::~Sphere() { std::cout << "Destructor SPHERE" << std::endl; }
+
 
 float Sphere::area() const {
   return 4 * M_PI * std::pow(radius_,2);

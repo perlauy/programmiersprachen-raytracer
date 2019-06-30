@@ -12,6 +12,8 @@ class Shape {
     Shape();
     Shape(std::string name, Color color);
 
+    virtual ~Shape();
+    // Without virtual, a Shape* s = new Sphere(), wont call ~Sphere
 
     virtual float area() const = 0;
     virtual float volume() const = 0;
