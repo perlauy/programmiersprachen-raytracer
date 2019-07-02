@@ -7,12 +7,12 @@
 #include <glm/vec3.hpp>
 
 struct HitPoint {
-  bool hit;
-  float t;
-  std::string object;
-  Color color;
-  glm::vec3 point;
-  glm::vec3 direction;
+  bool hit = false;
+  float t = 0.0f;
+  std::string object = '';
+  Color color{};
+  glm::vec3 point{};
+  glm::vec3 direction{};
 };
 
 #endif

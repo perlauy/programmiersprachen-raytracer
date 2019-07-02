@@ -16,7 +16,7 @@ class Sphere : public Shape {
     Sphere();
 
     // User-defined constructor
-    Sphere(std::string name, Color color, glm::vec3 const& center, float radius);
+    Sphere(std::string const& name, Color const& color, glm::vec3 const& center, float radius);
     ~Sphere();
 
     float area() const override;
@@ -24,7 +24,7 @@ class Sphere : public Shape {
 
     std::ostream& print(std::ostream& os) const override;
 
-    HitPoint intersect(Ray ray) const;
+    HitPoint intersect(Ray const& ray) const;
     
   private:
     glm::vec3 center_;

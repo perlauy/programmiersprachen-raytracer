@@ -127,10 +127,13 @@ The *contextual* keyword `override` helps to clarify the developer's intent (not
 
 ---
 
-`**virtual**`: The function may be overriden
-`**=0**`: The function must be virtual and *must* be overriden
-`**override**`: The function is meant to override a virtual function in a base class 
-`**final**`: The function is not meant to be overriden.
+**`virtual`**: The function may be overriden
+
+**`=0`**: The function must be virtual and *must* be overriden
+
+**`override`**: The function is meant to override a virtual function in a base class 
+
+**`final`**: The function is not meant to be overriden.
 
 `final` may also be applied to a class, meaning it won't be able to be derived from. As with override, it cannot be used in out-of-class definitions.
 
