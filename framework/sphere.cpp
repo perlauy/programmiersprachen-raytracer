@@ -53,16 +53,7 @@ HitPoint Sphere::intersect(Ray const& ray) const {
     distance
   );
   
-  glm::vec3 point{};
-  glm::vec3 normal{};
-  bool is_intersected_point = glm::intersectRaySphere(
-    ray.origin,
-    normalized_direction,
-    center_,
-    radius_,
-    point,
-    normal
-  );
+  glm::vec3 point = ray.origin + distance * normalized_direction;
 
   return HitPoint{
     is_intersected_distance,

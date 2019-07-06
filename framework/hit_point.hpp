@@ -9,7 +9,7 @@
 struct HitPoint {
   bool hit = false;
   float t = 0.0f;
-  std::string object = '';
+  std::string object = "";
   Color color{};
   glm::vec3 point{};
   glm::vec3 direction{};
