@@ -1,22 +1,25 @@
 #include "shape.hpp"
 #include "color.hpp"
+#include "material.hpp"
 
 #include <string>
 
 Shape::Shape() :
-  name_{"Anonymus"},
-  color_{.5f,.5f,.5f}
-{ std::cout << "Constructor SHAPE" << std::endl; }
+  name_{"Anonymus"}
+{ 
+	material_ = std::make_shared<Material>();
+}
 
-Shape::Shape(std::string name, Color color) :
-  name_{name},
-  color_{color}
-{ std::cout << "Constructor SHAPE" << std::endl; }
+Shape::Shape(std::string name, std::shared_ptr<Material> const& material) :
+  name_{name}  
+{
+  std::shared_ptr<Material> material_(material);
+}
 
 Shape::~Shape() { std::cout << "Destructor SHAPE" << std::endl; }
 
 std::ostream& Shape::print(std::ostream& os) const {
-  os << "Shape: " << name_ << " of color (" << color_.r << ", " << color_.g << ", " << color_.b << ")\n";
+  os << "Shape: " << name_ << "\n";
   return os;
 }
 

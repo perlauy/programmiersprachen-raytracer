@@ -14,7 +14,7 @@ class Box : public Shape {
     Box();
 
     // User-defined constructor
-    Box(std::string const& name, Color const& color, glm::vec3 const& minimum, glm::vec3 const& maximum);
+    Box(std::string const& name, std::shared_ptr<Material> const& material, glm::vec3 const& minimum, glm::vec3 const& maximum);
     
     float area() const override;
     float volume() const override;

@@ -16,8 +16,8 @@ Sphere::Sphere() :
   radius_{1.f}
 { std::cout << "Constructor SPHERE" << std::endl; }
 
-Sphere::Sphere(std::string const& name, Color const& color, glm::vec3 const& center, float radius) : 
-  Shape(name, color),
+Sphere::Sphere(std::string const& name, std::shared_ptr<Material> const& material, glm::vec3 const& center, float radius) : 
+  Shape(name, material),
   center_{center},
   radius_{radius}
 { std::cout << "Constructor SPHERE" << std::endl; }
@@ -59,7 +59,7 @@ HitPoint Sphere::intersect(Ray const& ray) const {
     is_intersected_distance,
     distance,
     name_,
-    color_,
+    material_,
     point, // selbst berechnen (don't call twice)
     ray.direction
   };

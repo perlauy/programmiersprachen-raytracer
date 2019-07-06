@@ -16,7 +16,7 @@ class Sphere : public Shape {
     Sphere();
 
     // User-defined constructor
-    Sphere(std::string const& name, Color const& color, glm::vec3 const& center, float radius);
+    Sphere(std::string const& name, std::shared_ptr<Material> const& material, glm::vec3 const& center, float radius);
     ~Sphere();
 
     float area() const override;

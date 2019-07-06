@@ -2,15 +2,17 @@
 #define SHAPE_HPP
 
 #include "color.hpp"
+#include "material.hpp"
+
 #include <iostream>
 #include <string>
-
+#include <memory>
 
 class Shape {
   public: 
 
     Shape();
-    Shape(std::string name, Color color);
+    Shape(std::string name, std::shared_ptr<Material> const& material);
 
     virtual ~Shape();
     // Without virtual, a Shape* s = new Sphere(), wont call ~Sphere
@@ -22,7 +24,7 @@ class Shape {
 
   protected:
     std::string name_;
-    Color color_;
+    std::shared_ptr<Material> material_;
 };
 
 std::ostream& operator<<(std::ostream& os, Shape const& s);
