@@ -35,7 +35,30 @@ Object {
   
   Public props & methods:
     Material
-    intersect() 
+    intersect(Ray)
+    shade(Ray r, float distance) :
+      vec3 point = r.origin + distance * r.direction
+      vec3 normal = getNormal(point)
+      float intensity
+      
+      // Should be for each color channel
+      foreach point light source :
+        vec3 l = normalize(light.origin - point)
+
+        // Diffuse, if light is visible
+        intensity += light.intensity * material.diffuse * cos(normal,l)
+
+        // Phong
+        vec3 v = normalize(-r)
+        vec3 reflection = l - 2 * scalarProduct(l,normal) * normal
+        intensity += light.intensity * material.reflection * pow(cos(reflection,v), m)
+
+      intensity += ambient_light.intensity * material.ambient
+
+      return Color{intensity_r, intensity_g, intensity_b}
+
+  private :
+    getNormal(Point p) // if p belongs to object, get normal vec
 }
 
 Sphere : Object {
@@ -45,4 +68,16 @@ Box : Object {
   
 }
 Tringle (?) : Object {
+}
+
+// ?
+Light {
+  float intensity
+  Color color
+}
+AmbientLight : Light {
+  
+}
+PointLight : Light {
+  vec3 origin
 }
