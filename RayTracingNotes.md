@@ -1,11 +1,11 @@
 # Ray-Tracing
 
 
-Scene {
+struct Scene {
   - Container of objects 
   - Container (?) of point light sources
   - Ambient light
-
+  - Container of materials
 }
 
 Camara {
@@ -72,7 +72,6 @@ Tringle (?) : Object {
 
 // ?
 Light {
-  float intensity
   Color color
 }
 AmbientLight : Light {
