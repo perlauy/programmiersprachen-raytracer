@@ -8,6 +8,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <iterator>
 
 
 void openScene(std::string const& filename) {
@@ -28,13 +29,10 @@ void openScene(std::string const& filename) {
         std::copy(parameters.begin(), parameters.end(),
              std::ostream_iterator<std::string>(std::cout, "\n"));
 
-        if(parameters.first() == "define") {
+        if(parameters.front() == "define") {
           
-          std::vector<std::string> object_type = parameters.at(1);
-          
-          switch(object_type) {
+          if(parameters.at(1) == "material") {
 
-            case "material":
               auto new_material = std::make_shared<Material>(parameters.at(2), parameters.at(3), parameters.at(4), parameters.at(5), parameters.at(6));
               materials_vector.push_back(new_material);
               break;
@@ -47,10 +45,10 @@ void openScene(std::string const& filename) {
 
     scene_file.close();
   }
-  else cout << "Unable to open file";
+  else std::cout << "Unable to open file";
 }
 
-void split_line(std::string const& str, std::vector result, char delim = '\t') {
+void split_line(std::string const& str, std::vector<std::string> result, char delim = '\t') {
     std::size_t current, previous = 0;
     current = str.find(delim);
     while (current != std::string::npos) {
