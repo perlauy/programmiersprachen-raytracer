@@ -2,10 +2,6 @@
 #define BOX_HPP
 
 #include "shape.hpp"
-#include "color.hpp"
-
-#include <glm/vec3.hpp>
-#include <string>
 
 class Box : public Shape {
 
@@ -18,6 +14,8 @@ class Box : public Shape {
     
     float area() const override;
     float volume() const override;
+
+    HitPoint intersect(Ray const& ray) const override;
 
     std::ostream& print(std::ostream& os) const override;
 

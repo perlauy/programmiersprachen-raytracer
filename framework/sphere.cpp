@@ -1,14 +1,6 @@
 #define _USE_MATH_DEFINES
 
 #include "sphere.hpp"
-#include "color.hpp"
-#include "hit_point.hpp"
-#include "ray.hpp"
-
-#include <cmath>
-#include <iostream>
-#include <glm/glm.hpp>
-#include <glm/gtx/intersect.hpp>
 
 Sphere::Sphere() :
   Shape(),

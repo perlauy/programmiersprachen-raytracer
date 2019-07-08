@@ -3,10 +3,16 @@
 
 #include "color.hpp"
 #include "material.hpp"
+#include "ray.hpp"
+#include "hit_point.hpp"
 
 #include <iostream>
 #include <string>
 #include <memory>
+#include <glm/vec3.hpp>
+#include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtx/intersect.hpp>
 
 class Shape {
   public: 
@@ -19,6 +25,8 @@ class Shape {
 
     virtual float area() const = 0;
     virtual float volume() const = 0;
+
+    virtual HitPoint intersect(Ray const& ray) const = 0;
 
     virtual std::ostream& print(std::ostream& os) const;
 
