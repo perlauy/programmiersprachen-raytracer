@@ -52,19 +52,21 @@ TEST_CASE ("raycast", "[raycast]")
   Ray ray2 = {{-10.0f, 0.0f, 0.0f}, {10.0f, 0.0f, 0.0f}};
   Ray ray3 = {{0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}};
   
-  HitPoint sp1_ray1 = sp1.intersect(ray1);
-  HitPoint sp1_ray2 = sp1.intersect(ray2);
-  HitPoint sp1_ray3 = sp1.intersect(ray3);
+  float t1_1, t1_2, t1_3;
+  HitPoint sp1_ray1 = sp1.intersect(ray1, t1_1);
+  HitPoint sp1_ray2 = sp1.intersect(ray2, t1_2);
+  HitPoint sp1_ray3 = sp1.intersect(ray3, t1_3);
   printHitPoint(sp1_ray1);
   printHitPoint(sp1_ray2);
   printHitPoint(sp1_ray3);
   REQUIRE(sp1_ray1.t == Approx(5));
   REQUIRE(sp1_ray2.t == Approx(5));
   REQUIRE(sp1_ray3.t == Approx(5));
-  
-  HitPoint sp2_ray1 = sp2.intersect(ray1);
-  HitPoint sp2_ray2 = sp2.intersect(ray2);
-  HitPoint sp2_ray3 = sp2.intersect(ray3);
+
+  float t2_1, t2_2, t2_3;
+  HitPoint sp2_ray1 = sp2.intersect(ray1, t2_1);
+  HitPoint sp2_ray2 = sp2.intersect(ray2, t2_2);
+  HitPoint sp2_ray3 = sp2.intersect(ray3, t2_3);
   printHitPoint(sp2_ray1);
   printHitPoint(sp2_ray2);
   printHitPoint(sp2_ray3);
@@ -72,15 +74,16 @@ TEST_CASE ("raycast", "[raycast]")
   REQUIRE(sp2_ray2.t == Approx(20));
   REQUIRE(sp2_ray3.t == Approx(10));
   
-  HitPoint sp3_ray1 = sp3.intersect(ray1);
-  HitPoint sp3_ray2 = sp3.intersect(ray2);
-  HitPoint sp3_ray3 = sp3.intersect(ray3);
+  float t3_1, t3_2, t3_3;
+  HitPoint sp3_ray1 = sp3.intersect(ray1, t3_1);
+  HitPoint sp3_ray2 = sp3.intersect(ray2, t3_2);
+  HitPoint sp3_ray3 = sp3.intersect(ray3, t3_3);
   printHitPoint(sp3_ray1);
   printHitPoint(sp3_ray2);
   printHitPoint(sp3_ray3);
-  REQUIRE(sp3_ray1.t == Approx(0));
-  REQUIRE(sp3_ray2.t == Approx(0));
-  REQUIRE(sp3_ray3.t == Approx(-16.3205));
+  REQUIRE(sp3_ray1.t < 0);
+  REQUIRE(sp3_ray2.t < 0);
+  REQUIRE(sp3_ray3.t < 0);
 
 }
 
