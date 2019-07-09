@@ -2,13 +2,14 @@
 #define HIT_POINT_HPP
 
 #include "material.hpp"
-
+#include <cmath>
 #include <string>
 #include <glm/vec3.hpp>
+#include <memory>
 
 struct HitPoint {
   bool hit = false;
-  float t = 0.0f;
+  float t = HUGE_VALF;
   std::string object = "";
   std::shared_ptr<Material> material_ = std::make_shared<Material>();
   glm::vec3 point{};

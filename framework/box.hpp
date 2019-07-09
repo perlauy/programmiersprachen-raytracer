@@ -20,6 +20,9 @@ class Box : public Shape {
     std::ostream& print(std::ostream& os) const override;
 
   private:
+    bool hit_test(HitPoint& result, Ray const& ray, float fixed_value, int index) const;
+
+  private:
     glm::vec3 minimum_;
     glm::vec3 maximum_;
 
