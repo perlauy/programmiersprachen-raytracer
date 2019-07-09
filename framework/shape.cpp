@@ -1,8 +1,4 @@
 #include "shape.hpp"
-#include "color.hpp"
-#include "material.hpp"
-
-#include <string>
 
 Shape::Shape() :
   name_{"Anonymus"}

@@ -1,8 +1,8 @@
 #define CATCH_CONFIG_RUNNER
 #define _USE_MATH_DEFINES
 
-#include <material.hpp>
 #include <sphere.hpp>
+#include <material.hpp>
 #include <box.hpp>
 #include <hit_point.hpp>
 

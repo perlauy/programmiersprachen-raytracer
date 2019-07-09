@@ -30,33 +30,7 @@ HitPoint Box::intersect(Ray const& ray) const {
   glm::vec3 normalized_direction = glm::normalize(ray.direction);
   float distance = 0.0f;
 
-  bool is_intersected_distance = glm::intersectRaySphere(
-    ray.origin,
-    normalized_direction,
-    center_,
-    radius_ * radius_,
-    distance
-  );
-  
-  glm::vec3 point{};
-  glm::vec3 normal{};
-  bool is_intersected_point = glm::intersectRaySphere(
-    ray.origin,
-    normalized_direction,
-    center_,
-    radius_,
-    point,
-    normal
-  );
-
-  return HitPoint{
-    is_intersected_distance,
-    distance,
-    name_,
-    color_,
-    point, // selbst berechnen (don't call twice)
-    ray.direction
-  };
+  return HitPoint{};
 }
 
 std::ostream& Box::print(std::ostream& os) const {
