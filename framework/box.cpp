@@ -28,35 +28,42 @@ float Box::volume() const {
 
 HitPoint Box::intersect(Ray const& ray) const {
   glm::vec3 normalized_direction = glm::normalize(ray.direction);
-  float distance = 0.0f;
+  glm::vec3 central = minimum_ + (1.0f/2.0f) * (maximum_ - minimum_); 
+  glm::vec3 origin_to_central = central - ray.origin;
+  HitPoint result{};
+  for (int index = 0; index < 3; ++index) {
+    if (origin_to_central[index] != 0) {
+      if (origin_to_central[index] < 0) {
+        if (hit_test(result, ray, maximum_[index], 0)) {
+          return result;
+        }
+      } else {
+        if (hit_test(result, ray, minimum_[index], 0)) {
+          return result;
+        }
+      }
+    }
+  } 
+  return result;
+}
 
-  bool is_intersected_distance = glm::intersectRaySphere(
-    ray.origin,
-    normalized_direction,
-    center_,
-    radius_ * radius_,
-    distance
-  );
-  
-  glm::vec3 point{};
-  glm::vec3 normal{};
-  bool is_intersected_point = glm::intersectRaySphere(
-    ray.origin,
-    normalized_direction,
-    center_,
-    radius_,
-    point,
-    normal
-  );
-
-  return HitPoint{
-    is_intersected_distance,
-    distance,
-    name_,
-    color_,
-    point, // selbst berechnen (don't call twice)
-    ray.direction
-  };
+bool Box::hit_test(HitPoint& result, Ray const& ray, float fixed_value, int index) const {
+  float distance = (fixed_value - ray.origin[index])/ray.direction[index];
+  glm::vec3 resulting_point = ray.origin + ray.direction * distance;
+  if ((minimum_[(index + 1) % 3] <= resulting_point[(index + 1) % 3] <= maximum_[(index + 1) % 3]) and
+    (minimum_[(index + 2) % 3] <= resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3])) {
+    result = HitPoint{
+      true,
+      distance,
+      name_,
+      material_,
+      resulting_point, // selbst berechnen (don't call twice)
+      ray.direction
+    };
+    return true;
+  } else {
+    return false;
+  }
 }
 
 std::ostream& Box::print(std::ostream& os) const {
