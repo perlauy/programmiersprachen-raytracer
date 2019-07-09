@@ -18,15 +18,15 @@ struct Material {
   Material(std::string const& arg_name, Color const& arg_ka, Color const& arg_kd, Color const& arg_ks, float arg_m) : 
 	  name{arg_name},
 	  ka{arg_ka},
-    kd{arg_kd},
+	  kd{arg_kd},
 	  ks{arg_ks},
 	  m{arg_m}
   {};
 
   std::string name = "";
-  Color ka ={0.0f, 0.0f, 0.0f};
-  Color kd ={0.0f, 0.0f, 0.0f};
-  Color ks ={0.0f, 0.0f, 0.0f};
+  Color ka{0.0f, 0.0f, 0.0f};
+  Color kd{0.0f, 0.0f, 0.0f};
+  Color ks{0.0f, 0.0f, 0.0f};
   float m = 0.0f;
 
 };
