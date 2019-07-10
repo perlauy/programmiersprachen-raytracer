@@ -27,11 +27,9 @@ float Box::volume() const {
 }
 
 HitPoint Box::intersect(Ray const& ray, float& t) const {
-  glm::vec3 normalized_direction = glm::normalize(ray.direction);
   glm::vec3 central = minimum_ + (1.0f/2.0f) * (maximum_ - minimum_); 
   glm::vec3 origin_to_central = central - ray.origin;
   HitPoint result{};
-  
   for (int index = 0; index < 3; ++index) {
     if (origin_to_central[index] != 0) {
       if (origin_to_central[index] < 0) {
@@ -52,9 +50,10 @@ HitPoint Box::intersect(Ray const& ray, float& t) const {
 }
 
 bool Box::hit_test(HitPoint& result, Ray const& ray, float fixed_value, int index) const {
-  float distance = (fixed_value - ray.origin[index])/ray.direction[index];
-  glm::vec3 resulting_point = ray.origin + ray.direction * distance;
-  if ((minimum_[(index + 1) % 3] <= resulting_point[(index + 1) % 3] <= maximum_[(index + 1) % 3]) &&
+  glm::vec3 normalized_direction = glm::normalize(ray.direction);
+  float distance = (fixed_value - ray.origin[index])/normalized_direction[index];
+  glm::vec3 resulting_point = ray.origin + normalized_direction * distance;
+  if (distance >= 0 and (minimum_[(index + 1) % 3] <= resulting_point[(index + 1) % 3] <= maximum_[(index + 1) % 3]) &&
     (minimum_[(index + 2) % 3] <= resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3])) {
     result = HitPoint{
       true,

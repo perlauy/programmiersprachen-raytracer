@@ -93,20 +93,23 @@ TEST_CASE ("box_intersect", "[raycast]")
 {
   Box box{"DArtagnan", m, {0.f, 0.f, 0.f}, {2.f, 2.f, 2.f}};
 
-  Ray ray1 = {{-1.0f, -1.0f, -1.0f}, {1.0f, 4.0f, 1.0f}};
+  Ray ray1 = {{-1.0f, -1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}};
   Ray ray2 = {{-10.0f, 0.0f, 0.0f}, {10.0f, 0.0f, 0.0f}};
   Ray ray3 = {{10.0f, 0.0f, 10.0f}, {-10.0f, 0.0f, -10.0f}};
+  Ray ray4 = {{10.0f, 0.0f, 10.0f}, {10.0f, 0.0f, 10.0f}};
   
   float t1_1, t1_2, t1_3;
   HitPoint box_ray1 = box.intersect(ray1, t1_1);
   HitPoint box_ray2 = box.intersect(ray2, t1_2);
   HitPoint box_ray3 = box.intersect(ray3, t1_3);
+  HitPoint box_ray4 = box.intersect(ray4, t1_3);
   printHitPoint(box_ray1);
   printHitPoint(box_ray2);
   printHitPoint(box_ray3);
-  REQUIRE(box_ray1.t == Approx(1));
+  REQUIRE(box_ray1.t == Approx(1.73205));
   REQUIRE(box_ray2.t == Approx(10));
-  REQUIRE(box_ray3.t == Approx(11.314));
+  REQUIRE(box_ray3.t == Approx(11.31371));
+  REQUIRE(box_ray4.hit == false);
 
 }
 
