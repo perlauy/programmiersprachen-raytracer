@@ -1,5 +1,6 @@
 #include "box.hpp"
 #include <ostream>
+#include <cmath>
 
 Box::Box() :
   Shape(),
@@ -32,16 +33,14 @@ HitPoint Box::intersect(Ray const& ray, float& t) const {
   HitPoint result{};
   
   for (int index = 0; index < 3; ++index) {
-    if (origin_to_central[index] * ray.direction[index] < 0) {
-      if (hit_test(result, ray, maximum_[index], index)) {
-        std::cout << "The mx distance in " << index << " is " << result.t << std::endl;
-      }
-    } else {
-      if (hit_test(result, ray, minimum_[index], index)) {
-        std::cout << "The mn distance in " << index << " is " << result.t << std::endl;
-      }
-    }
-  }
+	  if (ray.origin[index] > maximum_[index]
+		  || (ray.origin[index] > minimum_[index] && ray.direction[index] > 0)) {
+		  hit_test(result, ray, maximum_[index], index);
+	  }
+	  else {
+		  hit_test(result, ray, minimum_[index], index);
+	  };
+  };
   t = result.t;
   return result;
 }
@@ -51,12 +50,19 @@ bool Box::hit_test(HitPoint& result, Ray const& ray, float fixed_value, int inde
 
   if (ray.direction[index] != 0) {
     float distance = (fixed_value - ray.origin[index]) / normalized_direction[index];
+    std::cout << "Distance: " << distance << std::endl;
     glm::vec3 resulting_point = ray.origin + normalized_direction * distance;
-    if ((minimum_[(index + 1) % 3] <= resulting_point[(index + 1) % 3] <= maximum_[(index + 1) % 3]) &&
-      (minimum_[(index + 2) % 3] <= resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3])) {
+        std::cout << "Point: (" << resulting_point[0] << ", " << resulting_point[1] << ", " << resulting_point[2] <<")\n" << std::endl;
 
-      if (distance > 0 && distance < result.t) {
-          
+    // Comparison having problems with float appreciation. Approx?
+    // the denugger shows 2.0000048 > 2.000000...
+    if ((minimum_[(index + 1) % 3] <= resulting_point[(index + 1) % 3]) 
+      && (resulting_point[(index + 1) % 3] <= maximum_[(index + 1) % 3])
+      && (minimum_[(index + 2) % 3] <= resulting_point[(index + 2) % 3])
+      && (resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3])) {
+
+      if (distance < abs(result.t)) {
+
         result = HitPoint{
           true,
           distance,
@@ -65,7 +71,7 @@ bool Box::hit_test(HitPoint& result, Ray const& ray, float fixed_value, int inde
           resulting_point,
           normalized_direction
         };
-      return true;
+        return true;
       }
     }
   }
