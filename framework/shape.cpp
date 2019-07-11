@@ -12,7 +12,7 @@ Shape::Shape(std::string name, std::shared_ptr<Material> const& material) :
   std::shared_ptr<Material> material_(material);
 }
 
-Shape::~Shape() { std::cout << "Destructor SHAPE" << std::endl; }
+Shape::~Shape() {}
 
 std::ostream& Shape::print(std::ostream& os) const {
   os << "Shape: " << name_ << "\n";

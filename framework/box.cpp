@@ -1,5 +1,6 @@
 #include "box.hpp"
-
+#include <ostream>
+#include <cmath>
 
 Box::Box() :
   Shape(),
@@ -31,42 +32,49 @@ HitPoint Box::intersect(Ray const& ray, float& t) const {
   glm::vec3 origin_to_central = central - ray.origin;
   HitPoint result{};
   for (int index = 0; index < 3; ++index) {
-    if (origin_to_central[index] != 0) {
-      if (origin_to_central[index] < 0) {
-        if (hit_test(result, ray, maximum_[index], 0)) {
-          t = result.t;
-          return result;
-        }
-      } else {
-        if (hit_test(result, ray, minimum_[index], 0)) {
-          t = result.t;
-          return result;
-        }
-      }
-    }
-  }
+	  if (ray.origin[index] > maximum_[index]
+		  || (ray.origin[index] > minimum_[index] && ray.direction[index] > 0)) {
+		  hit_test(result, ray, maximum_[index], index);
+	  }
+	  else {
+		  hit_test(result, ray, minimum_[index], index);
+	  };
+  };
   t = result.t;
   return result;
 }
 
 bool Box::hit_test(HitPoint& result, Ray const& ray, float fixed_value, int index) const {
   glm::vec3 normalized_direction = glm::normalize(ray.direction);
-  float distance = (fixed_value - ray.origin[index])/normalized_direction[index];
-  glm::vec3 resulting_point = ray.origin + normalized_direction * distance;
-  if (distance >= 0 and (minimum_[(index + 1) % 3] <= resulting_point[(index + 1) % 3] <= maximum_[(index + 1) % 3]) &&
-    (minimum_[(index + 2) % 3] <= resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3])) {
-    result = HitPoint{
-      true,
-      distance,
-      name_,
-      material_,
-      resulting_point,
-      ray.direction
-    };
-    return true;
-  } else {
-    return false;
+
+  if (ray.direction[index] != 0) {
+    float distance = (fixed_value - ray.origin[index]) / normalized_direction[index];
+    std::cout << "Distance: " << distance << std::endl;
+    glm::vec3 resulting_point = ray.origin + normalized_direction * distance;
+        std::cout << "Point: (" << resulting_point[0] << ", " << resulting_point[1] << ", " << resulting_point[2] <<")\n" << std::endl;
+
+    // Comparison having problems with float appreciation. Approx?
+    // the denugger shows 2.0000048 > 2.000000...
+    if ((minimum_[(index + 1) % 3] <= resulting_point[(index + 1) % 3]) 
+      && (resulting_point[(index + 1) % 3] <= maximum_[(index + 1) % 3])
+      && (minimum_[(index + 2) % 3] <= resulting_point[(index + 2) % 3])
+      && (resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3])) {
+
+      if (abs(distance) < abs(result.t)) {
+
+        result = HitPoint{
+          true,
+          distance,
+          name_,
+          material_,
+          resulting_point,
+          normalized_direction
+        };
+        return true;
+      }
+    }
   }
+  return false;
 }
 
 std::ostream& Box::print(std::ostream& os) const {

@@ -6,15 +6,15 @@ Sphere::Sphere() :
   Shape(),
   center_{0.f,0.f,0.f},
   radius_{1.f}
-{ std::cout << "Constructor SPHERE" << std::endl; }
+{}
 
 Sphere::Sphere(std::string const& name, std::shared_ptr<Material> const& material, glm::vec3 const& center, float radius) : 
   Shape(name, material),
   center_{center},
   radius_{radius}
-{ std::cout << "Constructor SPHERE" << std::endl; }
+{}
 
-Sphere::~Sphere() { std::cout << "Destructor SPHERE" << std::endl; }
+Sphere::~Sphere() {}
 
 
 float Sphere::area() const {
