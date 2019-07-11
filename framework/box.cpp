@@ -61,7 +61,7 @@ bool Box::hit_test(HitPoint& result, Ray const& ray, float fixed_value, int inde
       && (minimum_[(index + 2) % 3] <= resulting_point[(index + 2) % 3])
       && (resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3])) {
 
-      if (distance < abs(result.t)) {
+      if (abs(distance) < abs(result.t)) {
 
         result = HitPoint{
           true,
