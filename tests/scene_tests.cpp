@@ -55,19 +55,19 @@ TEST_CASE ("scene_user_defined", "[scene]")
   std::set<std::shared_ptr<Shape>> objects = {sp0, bx0};
 
   // Create a set of lights
-  auto light = std::make_shared<Light>(Light{"light0"});
-  std::set<std::shared_ptr<Light>> lights = {light};
+  Light light{"light0"};
+  std::set<Light> lights = {light};
 
   // Create a set of cameras
-  auto camera = std::make_shared<Camera>(Camera{"camera0"});
-  std::set<std::shared_ptr<Camera>> cameras = {camera};
+  Camera camera{"camera0"};
+  std::set<Camera> cameras = {camera};
 
 
   // Create scene using the sets
   Scene scene_user_defined{materials, objects, lights, cameras};
 
   // Test operator< by seaching for a material
-  auto search_dummy_material = std::make_shared<Material>("red", Color{}, Color{}, Color{}, 0.0f);
+  std::shared_ptr<Material> search_dummy_material = std::make_shared<Material>("red", Color{}, Color{}, Color{}, 0.0f);
   auto it_material = scene_user_defined.materials.find(search_dummy_material);
 
   // Test operator< by seaching for a shape objects

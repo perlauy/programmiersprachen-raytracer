@@ -8,8 +8,8 @@
 struct Light {
   // TO BE IMPLEMENTED
 
-  friend bool operator<(std::shared_ptr<Light> const& lhs, std::shared_ptr<Light> const& rhs) {
-    return lhs->name < rhs->name;
+  friend bool operator<(Light const& lhs, Light const& rhs) {
+    return lhs.name < rhs.name;
   };
 
   std::string name = "";

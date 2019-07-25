@@ -16,8 +16,9 @@ struct Scene {
   
   std::set<std::shared_ptr<Material>> materials{};
   std::set<std::shared_ptr<Shape>> objects{};
-  std::set<std::shared_ptr<Light>> lights{};
-  std::set<std::shared_ptr<Camera>> cameras{};
+  
+  std::set<Light> lights{};
+  std::set<Camera> cameras{};
 
 };
 
