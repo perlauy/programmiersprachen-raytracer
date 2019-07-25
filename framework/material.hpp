@@ -23,6 +23,10 @@ struct Material {
 	  m{arg_m}
   {};
 
+  friend bool operator<(std::shared_ptr<Material> const& lhs, std::shared_ptr<Material> const& rhs) {
+    return lhs->name < rhs->name;
+  };
+
   std::string name = "";
   Color ka{0.0f, 0.0f, 0.0f};
   Color kd{0.0f, 0.0f, 0.0f};

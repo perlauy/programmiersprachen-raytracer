@@ -30,6 +30,8 @@ class Shape {
 
     virtual std::ostream& print(std::ostream& os) const;
 
+    friend bool operator<(std::shared_ptr<Shape> const& lhs, std::shared_ptr<Shape> const& rhs);
+
   protected:
     std::string name_;
     std::shared_ptr<Material> material_;
