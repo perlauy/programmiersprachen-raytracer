@@ -58,6 +58,7 @@ void openScene(std::string const& filename) {
           line_string_stream >> material_m;
        
 		  // Create the shared pointer to the new material
+		  // (MateriaL{}) to avoid constructor
           auto new_material = std::make_shared<Material>(
 			  material_name,
 			  Color { ka_red, ka_green, ka_blue },
