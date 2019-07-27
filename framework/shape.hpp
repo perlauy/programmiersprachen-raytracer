@@ -1,18 +1,23 @@
 #ifndef SHAPE_HPP
 #define SHAPE_HPP
 
+// Project files
 #include "color.hpp"
+#include "hit_point.hpp"
 #include "material.hpp"
 #include "ray.hpp"
-#include "hit_point.hpp"
 
-#include <iostream>
-#include <string>
-#include <memory>
-#include <glm/vec3.hpp>
-#include <cmath>
+// External libraries
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
+#include <glm/vec3.hpp>
+
+// Standard libraries
+#include <cmath>
+#include <iostream>
+#include <memory>
+#include <string>
+
 
 class Shape {
   public: 

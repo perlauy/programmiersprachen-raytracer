@@ -18,11 +18,11 @@ Sphere::~Sphere() {}
 
 
 float Sphere::area() const {
-  return 4 * M_PI * std::pow(radius_,2);
+  return 4 * M_PI * radius_ * radius_; //std::pow is more costly than doing the multiplication
 }
 
 float Sphere::volume() const {
-  return 4 * M_PI * std::pow(radius_,3) / 3;
+  return 4 * M_PI * radius_ * radius_ * radius_ / 3;
 }
 
 std::ostream& Sphere::print(std::ostream& os) const {

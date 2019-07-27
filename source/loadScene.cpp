@@ -1,7 +1,9 @@
 #define CATCH_CONFIG_RUNNER
 
 // Project files
+#include <camera.hpp>
 #include <material.hpp>
+#include <scene.hpp>
 
 // Standard libraries
 #include <algorithm>
@@ -23,6 +25,8 @@ std::map<std::string, std::shared_ptr<Material>> materials_map;
 void openScene(std::string const& filename) {
   std::string line_buffer;
   std::ifstream scene_file(filename);
+
+  Scene scene;
 
   if (scene_file.is_open()) {
 
@@ -76,6 +80,22 @@ void openScene(std::string const& filename) {
 
           std::cout << "Material created: " << material_name << std::endl;
         }
+      } else if ("render" == identifier) {
+
+        // !!!
+        // Leaving this here because I was first doing it in renderer, but it seems cleaner to pass to the renderer the camera directly
+        std::string camera_name_{"eye"};
+        // Get camera
+        // TODO: create a scene method for it
+        Camera dummy_camera{camera_name_};
+        auto camera_it = scene.cameras.find(dummy_camera);
+        if (camera_it == scene.cameras.end()) {
+          std::cerr << "Fatal Error Renderer::render(Scene const& scene, std::string const& camera_name) : No camera found with name \"" << camera_name_ << "\"\n";
+
+        }
+        Camera camera = *camera_it;
+
+        // TODO: Call renderer with the scene and the data
       }
     }
 

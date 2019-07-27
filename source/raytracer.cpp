@@ -12,7 +12,11 @@ int main(int argc, char* argv[])
   unsigned const image_height = 600;
   std::string const filename = "./checkerboard.ppm";
 
-  Renderer renderer{image_width, image_height, filename};
+  // TODO: load scene
+  Scene scene{};
+  Camera camera{};
+
+  Renderer renderer{image_width, image_height, filename, scene, camera};
 
   //create separate thread to see updates of pixels while rendering
   std::thread render_thread([&renderer]() {renderer.render();});
