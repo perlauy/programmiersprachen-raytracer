@@ -13,6 +13,9 @@ struct Light {
   };
 
   std::string name = "";
+  glm::vec3 pos{};
+  Color color{};
+  float brightness = 0;
 
 };
 

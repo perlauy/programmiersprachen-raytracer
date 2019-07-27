@@ -13,6 +13,7 @@ struct Camera {
   };
 
   std::string name = "";
+  float fov_x = 0;
 
 };
 
