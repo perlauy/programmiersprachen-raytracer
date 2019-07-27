@@ -24,12 +24,16 @@ void Renderer::render()
 {
   std::size_t const checker_pattern_size = 20;
 
-  FoV fov = compute_fov();
+  glm::mat4 camera_transform_matrix{};
 
   for (unsigned y = 0; y < height_; ++y) {
     for (unsigned x = 0; x < width_; ++x) {
       Pixel p(x,y);
-      Ray r = compute_camera_ray(p);
+      Ray simple_ray = compute_camera_ray(p); 
+
+      // Multiply simple camera ray by camera matrix transform
+      Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
+
       p.color = trace(r);
 
       /*
@@ -63,63 +67,18 @@ void Renderer::write(Pixel const& p)
 }
 
 
-FoV Renderer::compute_fov() const {
-
-  float fov_distance = (width_ / 2.0f) / std::tan(camera_.angle * M_PI / 360);
-  std::cout << "fov_distance: \n" << fov_distance << std::endl;
-  std::cout << "fov_distance: \n" << camera_.angle << std::endl;
-
-  glm::vec3 normalized_direction = glm::normalize(camera_.direction);
-  glm::vec3 fov_center = camera_.position + normalized_direction * fov_distance;
-  float angle = -90.0f;
-  glm::mat4 identity_matrix{};
-  glm::vec4 camera_up_T{ camera_.up[0], camera_.up[1], camera_.up[2], 0 };
-  glm::vec4 normalized_direction_T{ normalized_direction[0], normalized_direction[1], normalized_direction[2], 0 };
-
-  glm::mat4 matrix_rotate_left = glm::rotate(angle, camera_.up);
-
-  glm::vec4 direction_left = normalized_direction_T * matrix_rotate_left;
-  glm::vec3 direction_left_vec3(direction_left);
-  glm::vec3 fov_left = fov_center + direction_left_vec3 * (width_ / 2.0f);
-  glm::vec3 fov_right = fov_center + direction_left_vec3 * (width_ / -2.0f);
-
-  // Test transformations
-  // TODO: remove
-  std::cout << "FoV: \n"
-      << "Matrix: (" << "\n" 
-      << matrix_rotate_left[0][0] << ", " << matrix_rotate_left[0][1] << ", " << matrix_rotate_left[0][2] << ", " << matrix_rotate_left[0][2] <<"\n"
-      << matrix_rotate_left[1][0] << ", " << matrix_rotate_left[1][1] << ", " << matrix_rotate_left[1][2] << ", " << matrix_rotate_left[1][2] <<"\n"
-      << matrix_rotate_left[2][0] << ", " << matrix_rotate_left[2][1] << ", " << matrix_rotate_left[2][2] << ", " << matrix_rotate_left[2][2] <<"\n"
-      << matrix_rotate_left[3][0] << ", " << matrix_rotate_left[3][1] << ", " << matrix_rotate_left[3][2] << ", " << matrix_rotate_left[3][2] <<")\n"
-      << "Center: (" << fov_center[0] << ", " << fov_center[1] << ", " << fov_center[2] <<")\n"
-      << "Left: (" << fov_left[0] << ", " << fov_left[1] << ", " << fov_left[2] <<")\n"
-      << "Right: (" << fov_right[0] << ", " << fov_right[1] << ", " << fov_right[2] <<")\n"
-      << std::endl;
-  
-
-  glm::mat4 matrix_rotate_up = glm::rotate(90.0f, normalized_direction);
-
-  glm::vec4 direction_up = direction_left * matrix_rotate_up;
-  glm::vec3 direction_up_vec3(direction_up);
-  glm::vec3 fov_min = fov_left + direction_up_vec3 * (height_ / 2.0f);
-  glm::vec3 fov_max = fov_right + direction_up_vec3 * (height_ / -2.0f);
-
-  std::cout << "FoV: \n"
-	  << "Min: (" << fov_min[0] << ", " << fov_min[1] << ", " << fov_min[2] << ")\n"
-	  << "Max: (" << fov_max[0] << ", " << fov_max[1] << ", " << fov_max[2] << ")\n"
-	  << std::endl;
-
-  FoV f{fov_min, fov_max};
-  return f;
-}
-
-
 Ray Renderer::compute_camera_ray(Pixel const& p) const {
-
-  glm::vec3 direction = {0.0f, 0.0f, -1.0f * camera_.direction[2]};
-
-  Ray r{ camera_.position, glm::normalize(direction)};
+  float fov_distance = (width_ / 2.0f) / std::tan(camera_.angle * M_PI / 360.0f);
+  glm::vec3 direction = {p.x, p.y, -fov_distance};
+  Ray r{camera_.position, glm::normalize(direction)};
   return r;
+};
+
+Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const {
+  glm::vec4 r_T{ r.direction[0], r.direction[1], r.direction[2], 1};
+  r_T = matrix * r_T; 
+  Ray transformed_ray{r.origin, glm::vec3(r_T)};
+  return transformed_ray;
 };
 
 Color Renderer::trace(Ray const& r) const {

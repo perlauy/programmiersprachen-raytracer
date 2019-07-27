@@ -13,7 +13,6 @@
 // Project files
 #include "camera.hpp"
 #include "color.hpp"
-#include "fov.hpp"
 #include "pixel.hpp"
 #include "ppmwriter.hpp"
 #include "ray.hpp"
@@ -44,8 +43,8 @@ public:
 
   inline std::vector<Color> const& color_buffer() const
   {
-    return color_buffer_;
-  }
+	  return color_buffer_;
+  };
 
 private:
   unsigned width_;
@@ -58,8 +57,8 @@ private:
   Camera camera_;
 
   Ray compute_camera_ray(Pixel const& p) const;
-  FoV compute_fov() const;
   Color trace(Ray const& r) const;
+  Ray transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const;
 };
 
 #endif // #ifndef BUW_RENDERER_HPP
