@@ -1,15 +1,20 @@
 #define CATCH_CONFIG_RUNNER
 #define _USE_MATH_DEFINES
 
+// header, system
+#include <memory>
+#include <cmath>
+#include <iostream>
+
+// header, external libraries
+#include <catch.hpp>
+
+// header, project
 #include <sphere.hpp>
 #include <material.hpp>
 #include <box.hpp>
 #include <hit_point.hpp>
 
-#include <memory>
-#include <catch.hpp>
-#include <cmath>
-#include <iostream>
 
 void printHitPoint(HitPoint hp) {
   if (hp.hit) {

@@ -1,18 +1,24 @@
 #ifndef SHAPE_HPP
 #define SHAPE_HPP
 
+// header, system
+#include <iostream>
+#include <ostream>
+#include <string>
+#include <memory>
+#include <cmath>
+
+// header, external libraries
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/gtx/intersect.hpp>
+
+// header, project
 #include "color.hpp"
 #include "material.hpp"
 #include "ray.hpp"
 #include "hit_point.hpp"
 
-#include <iostream>
-#include <string>
-#include <memory>
-#include <glm/vec3.hpp>
-#include <cmath>
-#include <glm/glm.hpp>
-#include <glm/gtx/intersect.hpp>
 
 class Shape {
   public: 
@@ -20,6 +26,7 @@ class Shape {
     Shape();
     Shape(std::string name, std::shared_ptr<Material> const& material);
 
+    // Default constructor
     virtual ~Shape();
     // Without virtual, a Shape* s = new Sphere(), wont call ~Sphere
 
