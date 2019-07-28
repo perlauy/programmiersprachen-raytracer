@@ -11,7 +11,7 @@ struct HitPoint {
   bool hit = false;
   float t = HUGE_VALF;
   std::string object = "";
-  std::shared_ptr<Material> material_ = std::make_shared<Material>();
+  std::shared_ptr<Material> material_ = nullptr;
   glm::vec3 point{};
   glm::vec3 direction{};
 };

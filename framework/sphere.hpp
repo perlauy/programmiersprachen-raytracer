@@ -19,7 +19,7 @@ class Sphere : public Shape {
 
     std::ostream& print(std::ostream& os) const override;
 
-    HitPoint intersect(Ray const& ray, float& t) const override;
+    HitPoint intersect(Ray const& ray) const override;
     
   private:
     glm::vec3 center_;

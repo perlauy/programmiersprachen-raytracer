@@ -26,7 +26,7 @@ float Box::volume() const {
   return (maximum_[0] - minimum_[0]) * (maximum_[1] - minimum_[1]) * (maximum_[2] - minimum_[2]);
 }
 
-HitPoint Box::intersect(Ray const& ray, float& t) const {
+HitPoint Box::intersect(Ray const& ray) const {
   glm::vec3 central = minimum_ + (1.0f/2.0f) * (maximum_ - minimum_); 
   glm::vec3 origin_to_central = central - ray.origin;
   HitPoint result{};
@@ -39,7 +39,6 @@ HitPoint Box::intersect(Ray const& ray, float& t) const {
 		  hit_test(result, ray, minimum_[index], index);
 	  };
   };
-  t = result.t;
   return result;
 }
 
@@ -48,9 +47,7 @@ bool Box::hit_test(HitPoint& result, Ray const& ray, float fixed_value, int inde
 
   if (ray.direction[index] != 0) {
     float distance = (fixed_value - ray.origin[index]) / normalized_direction[index];
-    std::cout << "Distance: " << distance << std::endl;
     glm::vec3 resulting_point = ray.origin + normalized_direction * distance;
-        std::cout << "Point: (" << resulting_point[0] << ", " << resulting_point[1] << ", " << resulting_point[2] <<")\n" << std::endl;
 
     // Comparison having problems with float appreciation. Approx?
     // the denugger shows 2.0000048 > 2.000000...
@@ -80,5 +77,6 @@ std::ostream& Box::print(std::ostream& os) const {
   Shape::print(os);
   os << "Type: Box\n";
   os << "Minimum: (" << minimum_[0] << ", " << minimum_[1] << ", " << minimum_[2] << ")\tMaximum: (" << maximum_[0] << ", " << maximum_[1] << ", " << maximum_[2] << ")\n";
+  if (material_ != nullptr) os << "Material: " << material_->name;
   return os;
 }

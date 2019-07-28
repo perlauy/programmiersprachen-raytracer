@@ -76,6 +76,7 @@ TEST_CASE ("scene_user_defined", "[scene]")
 
   REQUIRE(scene_user_defined.materials.size() == 2);
   std::cout << "Ka material red: " << (*it_material)->ka << std::endl;
+  std::cout << "Ka material red: " << *it_material << std::endl;
   (*it_shape)->print(std::cout);
 }
 
@@ -89,6 +90,16 @@ TEST_CASE ("scene_load", "[scene]")
   REQUIRE(scene_loaded.objects.size() == 2);
   REQUIRE(scene_loaded.lights.size() == 1);
   REQUIRE(scene_loaded.cameras.size() == 1);
+
+  // Test operator< by seaching for a material
+  std::shared_ptr<Material> search_dummy_material = std::make_shared<Material>("red", Color{}, Color{}, Color{}, 0.0f);
+  auto it_material = scene_loaded.materials.find(search_dummy_material);
+  std::cout << "Material: " << *(*it_material) << std::endl;
+  // Test operator< by seaching for a shape objects
+  auto search_dummy_shape = std::make_shared<Box>("rbottom", *it_material, glm::vec3{}, glm::vec3{});
+  auto it_shape = scene_loaded.objects.find(search_dummy_shape);
+
+  (*it_shape)->print(std::cout);
 }
 
 int main(int argc, char *argv[])

@@ -15,7 +15,6 @@ std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std
     *it;
 }
 
-
 Scene open_scene(std::string const& filename) {
   std::string line_buffer;
   std::ifstream scene_file(filename);
@@ -175,7 +174,7 @@ Scene open_scene(std::string const& filename) {
           std::cout << "Camera created: " << camera_name << std::endl;
         }
       }
-
+    // TODO: read last line with "render...." and return to references (?)
     }
 
     // Since the object Scene is being created on return, when the function is over,

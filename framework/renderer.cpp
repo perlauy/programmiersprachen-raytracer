@@ -29,20 +29,14 @@ void Renderer::render()
   for (unsigned y = 0; y < height_; ++y) {
     for (unsigned x = 0; x < width_; ++x) {
       Pixel p(x,y);
+      // Get a ray according to camera world
       Ray simple_ray = compute_camera_ray(p); 
 
       // Multiply simple camera ray by camera matrix transform
+      // TODO: test camera movements
       Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
 
       p.color = trace(r);
-
-      /*
-      if ( ((x/checker_pattern_size)%2) != ((y/checker_pattern_size)%2)) {
-        p.color = Color{0.0f, 1.0f, float(x)/height_};
-      } else {
-        p.color = Color{1.0f, 0.0f, float(y)/width_};
-      }
-      */
 
       write(p);
     }
@@ -69,7 +63,7 @@ void Renderer::write(Pixel const& p)
 
 Ray Renderer::compute_camera_ray(Pixel const& p) const {
   float fov_distance = (width_ / 2.0f) / std::tan(camera_.fov_x * M_PI / 360.0f);
-  glm::vec3 direction{p.x, p.y, -fov_distance};
+  glm::vec3 direction{p.x - (width_ / 2.0f), p.y - (height_ / 2.0f), -fov_distance};
   Ray r{camera_.position, glm::normalize(direction)};
   return r;
 };
@@ -93,13 +87,33 @@ glm::mat4 Renderer::get_camera_matrix() const {
     vector_u[1], vector_v[1], -vector_n[1], camera_.position[1],
     vector_u[2], vector_v[2], -vector_n[2], camera_.position[2],
     0, 0, 0, 1
-  }
+  };
   return matrix;
 };
 
 
 Color Renderer::trace(Ray const& r) const {
+  
+  // Create a default hit point, which will have the info
+  HitPoint hp{};
 
-  // TO BE IMPLEMENTED
-  return Color{(std::rand() % 100) / 100.0f, (std::rand() % 100) / 100.0f, (std::rand() % 100) / 100.0f};
+  for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
+    HitPoint result = (*it)->intersect(r);
+    if (result.t < hp.t) {
+      hp = result;
+    }
+  }
+
+  // Now that we know which object and which material is, calculate light
+  // TODO
+  // shade();
+  std::shared_ptr<Material> mat = hp.material_;
+
+  if (hp.hit && mat != nullptr) {
+    return mat->ka;
+  } else {
+    // TODO: define background color    
+    return Color{0.0f,0.0f,0.0f};
+  }
+
 };

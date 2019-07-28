@@ -3,13 +3,13 @@
 Shape::Shape() :
   name_{"Anonymus"}
 { 
-	material_ = std::make_shared<Material>();
+	material_ = nullptr;
 }
 
 Shape::Shape(std::string name, std::shared_ptr<Material> const& material) :
-  name_{name}  
+  name_{name},
+  material_(material)
 {
-  std::shared_ptr<Material> material_(material);
 }
 
 Shape::~Shape() {}

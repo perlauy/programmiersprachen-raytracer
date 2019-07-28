@@ -33,9 +33,10 @@ std::ostream& Sphere::print(std::ostream& os) const {
   return os;
 }
 
-HitPoint Sphere::intersect(Ray const& ray, float& t) const {
+HitPoint Sphere::intersect(Ray const& ray) const {
 
   glm::vec3 normalized_direction = glm::normalize(ray.direction);
+  float t = HUGE_VALF;
 
   bool is_intersected_distance = glm::intersectRaySphere(
     ray.origin,
