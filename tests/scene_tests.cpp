@@ -79,6 +79,18 @@ TEST_CASE ("scene_user_defined", "[scene]")
   (*it_shape)->print(std::cout);
 }
 
+// Aufgabe 7.1
+// Load a scene
+TEST_CASE ("scene_load", "[scene]")
+{
+  Scene scene_loaded = open_scene("scene.sdf");
+
+  REQUIRE(scene_loaded.materials.size() == 3);
+  REQUIRE(scene_loaded.objects.size() == 2);
+  REQUIRE(scene_loaded.lights.size() == 1);
+  REQUIRE(scene_loaded.cameras.size() == 1);
+}
+
 int main(int argc, char *argv[])
 {
   return Catch::Session().run(argc, argv);

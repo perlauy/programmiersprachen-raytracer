@@ -1,6 +1,5 @@
 #include "box.hpp"
-#include <ostream>
-#include <cmath>
+
 
 Box::Box() :
   Shape(),

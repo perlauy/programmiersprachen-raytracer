@@ -23,13 +23,6 @@ target_link_libraries(tests
   ${FRAMEWORK_NAME}
   )
 
-# Build loadScene
-add_executable(loadScene
-  loadScene.cpp)
-target_link_libraries(loadScene
-  ${GLFW_LIBRARIES}
-  ${FRAMEWORK_NAME}
-  )
 
 
 # Build fileload

@@ -30,3 +30,4 @@ _bkp
 *.sublime-project
 *.sublime-workspace
 .vs
+.vscode

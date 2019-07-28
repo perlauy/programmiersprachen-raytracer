@@ -2,6 +2,7 @@
 
 #include "sphere.hpp"
 
+
 Sphere::Sphere() :
   Shape(),
   center_{0.f,0.f,0.f},
