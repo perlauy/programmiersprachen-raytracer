@@ -1,5 +1,9 @@
 #include "scene.hpp"
 
+// !!!
+// Creates a Material Dummy. Tested with others?
+// Making it specific for materials
+// Maybe we can overload it if needed?
 template<typename T>
 std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std::shared_ptr<T>> const& set) {
   // O(logN)
@@ -11,7 +15,8 @@ std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std
     *it;
 }
 
-Scene const& openScene(std::string const& filename) {
+
+Scene open_scene(std::string const& filename) {
   std::string line_buffer;
   std::ifstream scene_file(filename);
 
@@ -95,7 +100,7 @@ Scene const& openScene(std::string const& filename) {
             std::shared_ptr<Material> material = find_name_in_set(material_name, materials);
 
             Box box{shape_name, material, glm::vec3{x_min,y_min,z_min}, glm::vec3{x_max,y_max,z_max}};
-            auto new_shape = std::make_shared<Shape>(box);
+            auto new_shape = std::make_shared<Box>(box);
 
             shapes.insert(new_shape);
 
@@ -116,7 +121,7 @@ Scene const& openScene(std::string const& filename) {
             std::shared_ptr<Material> material = find_name_in_set(material_name, materials);
 
             Sphere sphere{shape_name, material, glm::vec3{x,y,z}, radius};
-            auto new_shape = std::make_shared<Shape>(sphere);
+            auto new_shape = std::make_shared<Sphere>(sphere);
 
             shapes.insert(new_shape);
 
@@ -171,8 +176,11 @@ Scene const& openScene(std::string const& filename) {
         }
       }
 
-      return Scene{materials, shapes, lights, cameras};
     }
+
+    // Since the object Scene is being created on return, when the function is over,
+    // the memory is deleted. So the return type was changed.
+    return Scene{materials, shapes, lights, cameras};
 
     scene_file.close();
   }

@@ -36,6 +36,6 @@ struct Scene {
 template<typename T>
 std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std::shared_ptr<T>> const& set);
 
-Scene const& openScene(std::string const& filename);
+Scene open_scene(std::string const& filename);
 
 #endif //#define SCENE_HPP

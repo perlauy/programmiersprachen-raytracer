@@ -1,6 +1,12 @@
 #ifndef LIGHT_HPP
 #define LIGHT_HPP
 
+// Project files
+#include "color.hpp"
+
+// External libraries
+#include <glm/vec3.hpp>
+
 // Standard libraries
 #include <string>
 
