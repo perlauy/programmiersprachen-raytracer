@@ -104,7 +104,6 @@ Color Renderer::trace(Ray const& r) const {
     if (result.hit && result.t < hp.t) {
       hp = result;
       s = *it;
-      s->print(std::cout);
     }
   }
 

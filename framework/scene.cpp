@@ -15,7 +15,7 @@ std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std
     *it;
 }*/
 
-Scene open_scene(std::string const& filename) {
+Scene open_scene(std::string const& filename, RenderInformation& r) {
 
   std::cout << "- loading sdf - " << std::endl;
 
@@ -175,7 +175,30 @@ Scene open_scene(std::string const& filename) {
           cameras.insert({camera_name, camera});
 
           std::cout << "Camera created: " << camera_name << std::endl;
-        }
+
+
+        } 
+      } else if ("render" == identifier) {
+        std::string camera_name;
+        line_string_stream >> camera_name;
+        Camera& camera = cameras.find(camera_name)->second;
+
+        std::string file_name;
+        line_string_stream >> file_name;
+          
+        unsigned int width;
+        line_string_stream >> width;
+
+        unsigned int height;
+        line_string_stream >> height;
+
+        r.camera = camera;
+        r.filename = file_name;
+        r.width = width;
+        r.height = height;
+
+        std::cout << "Render Information loaded for: " << camera_name << std::endl;
+        
       }
     // TODO: read last line with "render...." and return to references (?)
     }

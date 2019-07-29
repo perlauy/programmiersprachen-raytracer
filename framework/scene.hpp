@@ -8,6 +8,7 @@
 #include <shape.hpp>
 #include <sphere.hpp>
 #include <box.hpp>
+#include <render_information.hpp>
 
 // Standard libraries
 #include <algorithm>
@@ -35,6 +36,6 @@ struct Scene {
 //template<typename T>
 //std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std::shared_ptr<T>> const& set);
 
-Scene open_scene(std::string const& filename);
+Scene open_scene(std::string const& filename, RenderInformation& r);
 
 #endif //#define SCENE_HPP
