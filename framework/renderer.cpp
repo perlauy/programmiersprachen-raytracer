@@ -96,17 +96,19 @@ Color Renderer::trace(Ray const& r) const {
   
   // Create a default hit point, which will have the info
   HitPoint hp{};
+  std::shared_ptr<Shape> s;  
 
   for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
     HitPoint result = (*it)->intersect(r);
-    if (result.t < hp.t) {
+    if (result.hit && result.t < hp.t) {
       hp = result;
+      s = *it;
     }
   }
 
   // Now that we know which object and which material is, calculate light
   // TODO
-  // shade();
+  // shade(s, hp);
   std::shared_ptr<Material> mat = hp.material_;
 
   if (hp.hit && mat != nullptr) {
@@ -117,3 +119,54 @@ Color Renderer::trace(Ray const& r) const {
   }
 
 };
+
+/*
+Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const {
+  // Do we simply add every light? It will be HDR, so we don't cap it?
+  std::array<float, 3> intensity{ {0.0f, 0.0f, 0.0f} }; // double-braces required in C++11 prior to the CWG 1270 revision
+  
+
+  // Calculate for each light
+  for(auto light_it = scene_.lights.begin(); light_it != scene_.lights.end(); ++light_it) {
+    // Get ray l and angle ß
+
+    // TODO: method for shape get_normal
+    glm::vec3 normal = s.get_normal(hp.point);
+
+    glm::vec3 l = glm::normalize(light_it->origin - hp.point);
+
+    // Calculate for each color channel
+    for (int i = 0; i < 3; ++i) {
+
+      float channel_intensity = 0.0f;
+      switch(i) {
+        case 0:
+          channel_intensity = light_it->brightness * color.r;
+          break;
+        case 1:
+          channel_intensity = light_it->brightness * color.g;
+          break;
+        case 2:
+          channel_intensity = light_it->brightness * color.b;
+          break;
+      }
+
+      // Diffuse, if light is visible
+      intensity[i] += light_it->color[i] * hp.material_->kd * std::cos(normal,l)
+
+      // Phong
+      vec3 v = normalize(-r)
+      vec3 reflection = l - 2 * scalarProduct(l,normal) * normal
+      intensity += light_it->brightness * material.reflection * std::pow(std::cos(reflection,v), m)
+
+      // TODO: add ambient light to the scene
+      // intensity[i] += scene_.ambient_light.intensity[i] * material.ka
+
+    }
+
+
+  }
+
+  return Color{0.0f,0.0f,0.0f};
+}
+*/
