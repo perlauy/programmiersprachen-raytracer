@@ -42,6 +42,7 @@ void Renderer::render()
     }
   }
   ppm_.save(filename_);
+  std::cout << "DONE" << std::endl;
 }
 
 void Renderer::write(Pixel const& p)
@@ -108,11 +109,11 @@ Color Renderer::trace(Ray const& r) const {
 
   // Now that we know which object and which material is, calculate light
   // TODO
-  // shade(s, hp);
   std::shared_ptr<Material> mat = hp.material_;
 
   if (hp.hit && mat != nullptr) {
-    return mat->ka;
+    return shade(s, hp);
+    //return mat->ka;
   } else {
     // TODO: define background color    
     return Color{0.0f,0.0f,0.0f};
@@ -128,33 +129,39 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
   // Calculate for each light
   for(auto light_it = scene_.lights.begin(); light_it != scene_.lights.end(); ++light_it) {
 
-    // TODO: method for shape get_normal
     glm::vec3 normal = s->get_normal(hp.point);
 
     // Get ray l and angle n_r 
     glm::vec3 l = glm::normalize(light_it->pos - hp.point);
     //float angle normal,l
-    float angle = M_PI / 2; //fake
-    
+    float angle = glm::angle(normal, l);
+
+
+    glm::vec3 r = glm::reflect(l, normal);
+    glm::vec3 v = glm::normalize(-hp.direction);
+
     // TODO: check if it's in shadow
     // (loop the objects and see if l intersects with another object)
 
-
-    // Calculate for each color channel
-
     // Diffuse, if light is visible   Ip * kd (l·n)
-    // TODO: get angle ß
-    float angle_v_r = M_PI / 2;
+    float angle_l_normal = glm::angle(l, normal);
     Color diffuse_light{
-      light_it->brightness * light_it->color.r * hp.material_->kd.r * std::cos(angle_v_r),
-      light_it->brightness * light_it->color.g * hp.material_->kd.g * std::cos(angle_v_r),
-      light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_v_r)
+      light_it->brightness * light_it->color.r * hp.material_->kd.r * std::cos(angle_l_normal),
+      light_it->brightness * light_it->color.g * hp.material_->kd.g * std::cos(angle_l_normal),
+      light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_l_normal)
     };
     result += diffuse_light;
 
+    /*
+    Color normal_map{
+      0.0f,
+      std::cos(glm::angle(normal, v)),
+      std::cos(glm::angle(normal, v))/2.0f
+    };
+    result += normal_map;
+    */  
 
     // Phong
-    glm::vec3 v = glm::normalize(-hp.direction);
     // TODO: reflection. test
     //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
 
@@ -163,5 +170,5 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
   }
 
-  return Color{0.0f,0.0f,0.0f};
+  return result;
 }

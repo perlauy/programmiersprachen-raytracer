@@ -59,10 +59,10 @@ HitPoint Sphere::intersect(Ray const& ray) const {
 }
 
 glm::vec3 Sphere::get_normal(glm::vec3 const& point) const {
-	return glm::vec3{
+	return glm::normalize(glm::vec3{
 	  point[0] - center_[0],
 	  point[1] - center_[1],
 	  point[2] - center_[2]
-	};
+	});
 }
 

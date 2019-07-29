@@ -26,6 +26,7 @@
 #include <glm/vec4.hpp>
 #include <glm/matrix.hpp>
 #include <glm/gtc/ulp.hpp>
+#include <glm/gtx/vector_angle.hpp>
 
 
 // Standard libraries

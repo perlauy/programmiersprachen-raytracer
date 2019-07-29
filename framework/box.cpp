@@ -89,7 +89,7 @@ glm::vec3 Box::get_normal(glm::vec3 const& point) const {
   } else if (point[2] == maximum_[2]) {
     result = {0.0f,0.0f,1.0f};
   };
-
+  result = glm::normalize(result);
   return result;
 }
 
