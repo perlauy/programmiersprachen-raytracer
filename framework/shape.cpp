@@ -16,6 +16,8 @@ Shape::~Shape() {}
 
 std::ostream& Shape::print(std::ostream& os) const {
   os << "Shape: " << name_ << "\n";
+  if (material_ != nullptr) os << "Material: " << material_->name; else os << "No material defined";
+  os << std::endl;
   return os;
 }
 

@@ -1,0 +1,14 @@
+# materials
+define	material	red	    1	0	0	1	0	0	1	0	0	20
+define  material    green   0   1   0   0   1   0   0   1   0   50
+define	material	blue	0	0	1	0	0	1	0	0	1	10
+# geometry
+define shape box rbottom 0 -80 -200 100 80 -100 red
+define shape sphere bsphere 0 0 -100 20 blue
+define shape sphere gsphere 10 0 -50 5 green
+# light - from right above
+define light sun 1000 700 0 .2 .2 .2 100
+# camera
+define camera eye 45.0
+# ... and go
+render eye image .ppm 480 320

@@ -8,11 +8,14 @@
 
 int main(int argc, char* argv[])
 {
-  unsigned const image_width = 800;
-  unsigned const image_height = 600;
+  std::string sdf_path = "../../resources/scene.sdf";
+  unsigned const image_width = 100;
+  unsigned const image_height = 100;
   std::string const filename = "./checkerboard.ppm";
-
-  Scene scene_loaded = open_scene("scene.sdf");
+  if (argc > 1) {
+    sdf_path = argv[1];
+  }
+  Scene scene_loaded = open_scene(sdf_path);
 
   //TODO: can't manage to make it work
   //Camera camera = find_name_in_set("eye", scene_loaded.cameras);
