@@ -16,6 +16,9 @@ std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std
 }
 
 Scene open_scene(std::string const& filename) {
+
+  std::cout << "- loading sdf - " << std::endl;
+
   std::string line_buffer;
   std::ifstream scene_file(filename);
 
@@ -176,6 +179,8 @@ Scene open_scene(std::string const& filename) {
       }
     // TODO: read last line with "render...." and return to references (?)
     }
+
+    std::cout << "- file successfully loaded - " << std::endl << std::endl;
 
     // Since the object Scene is being created on return, when the function is over,
     // the memory is deleted. So the return type was changed.

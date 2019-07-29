@@ -2,6 +2,7 @@
 #define MATERIAL_HPP
 
 #include "color.hpp"
+#include <memory>
 #include <string>
 
 struct Material {

@@ -26,6 +26,9 @@
 /// @author Christophe Riccio
 ///////////////////////////////////////////////////////////////////////////////////
 
+// added by Irene & Ludwig
+#define GLM_FORCE_RADIANS
+
 #include "../geometric.hpp"
 #include "../trigonometric.hpp"
 #include "../matrix.hpp"
