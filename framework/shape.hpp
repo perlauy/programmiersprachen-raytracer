@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 // Standard libraries
 #include <cmath>
@@ -32,6 +33,7 @@ class Shape {
     virtual float volume() const = 0;
 
     virtual HitPoint intersect(Ray const& ray) const = 0;
+    virtual glm::vec3 get_normal(glm::vec3 const& point) const = 0;
 
     virtual std::ostream& print(std::ostream& os) const;
 

@@ -31,6 +31,7 @@
 // Standard libraries
 #include <cmath>
 #include <string>
+#include <array>
 
 
 class Renderer
@@ -60,6 +61,7 @@ private:
   Color trace(Ray const& r) const;
   Ray transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const;
   glm::mat4 get_camera_matrix() const;
+  Color shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const;
 
 };
 

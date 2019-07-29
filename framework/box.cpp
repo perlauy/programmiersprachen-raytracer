@@ -73,6 +73,26 @@ bool Box::hit_test(HitPoint& result, Ray const& ray, float fixed_value, int inde
   return false;
 }
 
+glm::vec3 Box::get_normal(glm::vec3 const& point) const {
+  glm::vec3 result{};
+
+  if (point[0] == minimum_[0]) {
+    result = {-1.0f,0.0f,0.0f};
+  } else if (point[0] == maximum_[0]) {
+    result = {1.0f,0.0f,0.0f};
+  } else if (point[1] == minimum_[1]) {
+    result = {0.0f,-1.0f,0.0f};
+  } else if (point[1] == maximum_[1]) {
+    result = {0.0f,1.0f,0.0f};
+  } else if (point[2] == minimum_[2]) {
+    result = {0.0f,0.0f,-1.0f};
+  } else if (point[2] == maximum_[2]) {
+    result = {0.0f,0.0f,1.0f};
+  };
+
+  return result;
+}
+
 std::ostream& Box::print(std::ostream& os) const {
   Shape::print(os);
   os << "Type: Box\n";

@@ -83,10 +83,10 @@ glm::mat4 Renderer::get_camera_matrix() const {
   vector_v = glm::normalize(vector_v);
 
   glm::mat4 matrix{
-    vector_u[0], vector_v[0], -vector_n[0], camera_.position[0],
-    vector_u[1], vector_v[1], -vector_n[1], camera_.position[1],
-    vector_u[2], vector_v[2], -vector_n[2], camera_.position[2],
-    0, 0, 0, 1
+    {vector_u[0], vector_v[0], -vector_n[0], camera_.position[0]},
+    {vector_u[1], vector_v[1], -vector_n[1], camera_.position[1]},
+    {vector_u[2], vector_v[2], -vector_n[2], camera_.position[2]},
+    {0, 0, 0, 1}
   };
   return matrix;
 };
@@ -120,57 +120,48 @@ Color Renderer::trace(Ray const& r) const {
 
 };
 
-/*
+
 Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const {
   // Do we simply add every light? It will be HDR, so we don't cap it?
-  std::array<float, 3> intensity{ {0.0f, 0.0f, 0.0f} }; // double-braces required in C++11 prior to the CWG 1270 revision
-  
+  Color result{0.0f, 0.0f, 0.0f};
 
   // Calculate for each light
   for(auto light_it = scene_.lights.begin(); light_it != scene_.lights.end(); ++light_it) {
 
     // TODO: method for shape get_normal
-    glm::vec3 normal = s.get_normal(hp.point);
+    glm::vec3 normal = s->get_normal(hp.point);
 
-    // Get ray l and angle ß
-    glm::vec3 l = glm::normalize(light_it->origin - hp.point);
+    // Get ray l and angle n_r 
+    glm::vec3 l = glm::normalize(light_it->pos - hp.point);
+    //float angle normal,l
+    float angle = M_PI / 2; //fake
+    
     // TODO: check if it's in shadow
     // (loop the objects and see if l intersects with another object)
 
 
     // Calculate for each color channel
-    for (int i = 0; i < 3; ++i) {
 
-      float channel_intensity = 0.0f;
-      switch(i) {
-        case 0:
-          channel_intensity = light_it->brightness * color.r;
-          break;
-        case 1:
-          channel_intensity = light_it->brightness * color.g;
-          break;
-        case 2:
-          channel_intensity = light_it->brightness * color.b;
-          break;
-      }
+    // Diffuse, if light is visible   Ip * kd (l·n)
+    // TODO: get angle ß
+    float angle_v_r = M_PI / 2;
+    Color diffuse_light{
+      light_it->brightness * light_it->color.r * hp.material_->kd.r * std::cos(angle_v_r),
+      light_it->brightness * light_it->color.g * hp.material_->kd.g * std::cos(angle_v_r),
+      light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_v_r)
+    };
+    result += diffuse_light;
 
-      // Diffuse, if light is visible   Ip * kd (l·n)
-      intensity[i] += light_it->color[i] * hp.material_->kd * std::cos(normal,l)
 
-      // Phong
-      glm::vec3 v = glm::normalize(-hp.direction);
-      // TODO: scalarProduct?
-      glm::vec3 reflection = l - 2 * scalarProduct(l,normal) * normal
-      intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
+    // Phong
+    glm::vec3 v = glm::normalize(-hp.direction);
+    // TODO: reflection. test
+    //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
 
-      // TODO: add ambient light to the scene
-      // intensity[i] += scene_.ambient_light.intensity[i] * material.ka
-
-    }
-
+    // TODO: add ambient light to the scene
+    // intensity[i] += scene_.ambient_light.intensity[i] * material.ka
 
   }
 
   return Color{0.0f,0.0f,0.0f};
 }
-*/
