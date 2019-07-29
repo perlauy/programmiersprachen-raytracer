@@ -128,12 +128,15 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
   // Calculate for each light
   for(auto light_it = scene_.lights.begin(); light_it != scene_.lights.end(); ++light_it) {
-    // Get ray l and angle ß
 
     // TODO: method for shape get_normal
     glm::vec3 normal = s.get_normal(hp.point);
 
+    // Get ray l and angle ß
     glm::vec3 l = glm::normalize(light_it->origin - hp.point);
+    // TODO: check if it's in shadow
+    // (loop the objects and see if l intersects with another object)
+
 
     // Calculate for each color channel
     for (int i = 0; i < 3; ++i) {
@@ -151,13 +154,14 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
           break;
       }
 
-      // Diffuse, if light is visible
+      // Diffuse, if light is visible   Ip * kd (l·n)
       intensity[i] += light_it->color[i] * hp.material_->kd * std::cos(normal,l)
 
       // Phong
-      vec3 v = normalize(-r)
-      vec3 reflection = l - 2 * scalarProduct(l,normal) * normal
-      intensity += light_it->brightness * material.reflection * std::pow(std::cos(reflection,v), m)
+      glm::vec3 v = glm::normalize(-hp.direction);
+      // TODO: scalarProduct?
+      glm::vec3 reflection = l - 2 * scalarProduct(l,normal) * normal
+      intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
 
       // TODO: add ambient light to the scene
       // intensity[i] += scene_.ambient_light.intensity[i] * material.ka
