@@ -22,14 +22,3 @@ target_link_libraries(tests
   ${GLFW_LIBRARIES}
   ${FRAMEWORK_NAME}
   )
-
-
-
-# Build fileload
-add_executable(fileload
-  fileload.cpp)
-target_link_libraries(fileload
-  ${GLFW_LIBRARIES}
-  ${FRAMEWORK_NAME}
-  )
-
