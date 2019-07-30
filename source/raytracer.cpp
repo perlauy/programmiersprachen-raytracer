@@ -18,16 +18,16 @@ int main(int argc, char* argv[])
 
   Camera camera{"eye"};
 
-  RenderInformation info{camera, filename, image_width, image_height};
+  RenderInformation info{};//{camera, filename, image_width, image_height};
 
   Scene scene_loaded = open_scene(sdf_path, info);
 
-  Renderer renderer{info.width, info.height, info.filename, scene_loaded, info.camera};
+  Renderer renderer{info.width, info.height, info.filename, scene_loaded, *info.camera};
 
   //create separate thread to see updates of pixels while rendering
   std::thread render_thread([&renderer]() {renderer.render();});
 
-  Window window{{image_width, image_height}};
+  Window window{{info.width, info.height}};
 
   while (!window.should_close()) {
     if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {

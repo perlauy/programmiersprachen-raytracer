@@ -11,4 +11,4 @@ define light sun 1000 700 0 .2 .2 .2 100
 # camera
 define camera eye 45.0
 # ... and go
-render eye ./image.ppm 480 320
+render eye ./hallowelt.ppm 480 320

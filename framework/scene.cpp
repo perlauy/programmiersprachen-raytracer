@@ -188,14 +188,10 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
           
         unsigned int width;
         line_string_stream >> width;
-
         unsigned int height;
         line_string_stream >> height;
 
-        r.camera = camera;
-        r.filename = file_name;
-        r.width = width;
-        r.height = height;
+        r = RenderInformation{std::make_shared<Camera>(camera), file_name, width, height};
 
         std::cout << "Render Information loaded for: " << camera_name << std::endl;
         
@@ -213,4 +209,6 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
   }
 
   else std::cout << "Unable to open file";
+
+  return Scene{};
 }

@@ -1,12 +1,17 @@
 #ifndef RENDER_INFORMATION_HPP
 #define RENDER_INFORMATION_HPP
 
-#include <string>
+// Project files
 #include "camera.hpp"
+
+// Standard libraries
+#include <string>
+#include <memory>
+
 
 struct RenderInformation
 {
-    Camera& camera;
+    std::shared_ptr<Camera> camera;
     std::string filename = "image.ppm";
     unsigned width = 100;
     unsigned height = 100;
