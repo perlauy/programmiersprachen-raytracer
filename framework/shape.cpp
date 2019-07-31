@@ -14,6 +14,10 @@ Shape::Shape(std::string name, std::shared_ptr<Material> const& material) :
 
 Shape::~Shape() {}
 
+std::string Shape::get_name() const {
+  return name_;
+};
+
 void Shape::scale(float mx, float my, float mz) {
   world_transformation_[0][0] += mx;
   world_transformation_[1][1] += my;

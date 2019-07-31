@@ -44,6 +44,8 @@ class Shape {
     virtual float area() const = 0;
     virtual float volume() const = 0;
 
+    virtual std::string get_name() const;
+
     virtual HitPoint intersect(Ray const& ray) const = 0;
     virtual glm::vec3 get_normal(glm::vec3 const& point) const = 0;
 

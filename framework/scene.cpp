@@ -206,9 +206,57 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
 
         std::cout << "Render Information loaded for: " << camera_name << std::endl;
         
-      }
+      } else if ("transform" == identifier) {
+        std::string shape_name;
+        line_string_stream >> shape_name;
+
+        auto it = shapes.begin(); ; 
+        while((*it)->get_name() != shape_name) ++it;
+        std::shared_ptr<Shape> object = *it;
+
+        std::string transform_type;
+        line_string_stream >> transform_type;
+
+        if ("scale" == transform_type) {
+          float x, y, z;
+          line_string_stream >> x;
+          line_string_stream >> y;
+          line_string_stream >> z;
+
+          object->scale(x,y,z);
+
+          std::cout << "Scaled " << shape_name << std::endl;
+
+        } else if ("translate" == transform_type) {
+          float x, y, z;
+          line_string_stream >> x;
+          line_string_stream >> y;
+          line_string_stream >> z;
+
+          object->translate(x,y,z);
+
+          std::cout << "Translated " << shape_name << std::endl;
+
+        } else if ("rotate" == transform_type) {
+          float degree, x, y, z;
+          line_string_stream >> degree;
+          degree = degree/360 * 2 * M_PI;
+          line_string_stream >> x;
+          line_string_stream >> y;
+          line_string_stream >> z;
+
+          object->rotate(degree, x, y, z);
+
+          std::cout << "Rotated " << shape_name << std::endl;
+
+        }
+
+      } 
     // TODO: read last line with "render...." and return to references (?)
     }
+
+    for(auto it = shapes.begin(); it != shapes.end(); ++it) (*it)->compute_world_transformation_inv_();
+    std::cout << " Generated inverse matrices " << std::endl;
 
     std::cout << "- file successfully loaded - " << std::endl << std::endl;
 
