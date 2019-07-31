@@ -62,7 +62,7 @@ void Renderer::write(Pixel const& p)
   ppm_.write(p);
 }
 
-
+// computes the ray from eye to pixel
 Ray Renderer::compute_camera_ray(Pixel const& p) const {
   float fov_distance = (width_ / 2.0f) / std::tan(camera_.fov_x * M_PI / 360.0f);
   glm::vec3 direction{p.x - (width_ / 2.0f), p.y - (height_ / 2.0f), -fov_distance};
@@ -70,6 +70,7 @@ Ray Renderer::compute_camera_ray(Pixel const& p) const {
   return r;
 };
 
+// transformation of ray by given transformation matrix
 Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const {
   glm::vec4 r_T{ r.direction[0], r.direction[1], r.direction[2], 1};
   r_T = matrix * r_T; 
@@ -77,6 +78,7 @@ Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) cons
   return transformed_ray;
 };
 
+// generates transformation matrix
 glm::mat4 Renderer::get_camera_matrix() const {
   glm::vec3 vector_n{0,0,-1};
   glm::vec3 vector_u = glm::normalize(camera_.up) * vector_n;
@@ -93,7 +95,7 @@ glm::mat4 Renderer::get_camera_matrix() const {
   return matrix;
 };
 
-
+// test ray on intersection
 Color Renderer::trace(Ray const& r) const {
   
   // Create a default hit point, which will have the info
@@ -123,7 +125,7 @@ Color Renderer::trace(Ray const& r) const {
 
 };
 
-
+// computes color out of object and hitpoint
 Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const {
   // Do we simply add every light? It will be HDR, so we don't cap it?
   Color result{0.0f, 0.0f, 0.0f};
@@ -144,33 +146,45 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
     // TODO: check if it's in shadow
     // (loop the objects and see if l intersects with another object)
+    bool visable = true;
+    for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
+      if (*it != s) {
+        Ray r{hp.point, l};
+        HitPoint result = (*it)->intersect(r);
+        if (result.hit and result.t > 0) visable = false;
+      }
+    }
 
-    // Diffuse, if light is visible   Ip * kd (l·n)
-    float angle_l_normal = glm::angle(l, normal);
-    Color diffuse_light{
-      light_it->brightness * light_it->color.r * hp.material_->kd.r * std::cos(angle_l_normal),
-      light_it->brightness * light_it->color.g * hp.material_->kd.g * std::cos(angle_l_normal),
-      light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_l_normal)
-    };
-    result += diffuse_light;
+    if (visable) {
+      // Diffuse, if light is visible   Ip * kd (l·n)
+      float angle_l_normal = glm::angle(l, normal);
+      if (0 <= std::cos(angle_l_normal)) {
+        Color diffuse_light{
+          light_it->brightness * light_it->color.r * hp.material_->kd.r * std::cos(angle_l_normal),
+          light_it->brightness * light_it->color.g * hp.material_->kd.g * std::cos(angle_l_normal),
+          light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_l_normal)
+        };
+        result += diffuse_light;
+      }
+      
+      /*
+      Color normal_map{
+        0.0f,
+        std::cos(glm::angle(normal, v)),
+        std::cos(glm::angle(normal, v))/2.0f
+      };
+      result += normal_map;
+      */  
 
-    /*
-    Color normal_map{
-      0.0f,
-      std::cos(glm::angle(normal, v)),
-      std::cos(glm::angle(normal, v))/2.0f
-    };
-    result += normal_map;
-    */  
+      // Phong
+      // TODO: reflection. test
+      //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
 
-    // Phong
-    // TODO: reflection. test
-    //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
+      // TODO: add ambient light to the scene
+      // intensity[i] += scene_.ambient_light.intensity[i] * material.ka
 
-    // TODO: add ambient light to the scene
-    // intensity[i] += scene_.ambient_light.intensity[i] * material.ka
-
+    }
   }
-
+  if (result.r > 1 or result.g > 1 or result.b > 1) return Color{1,0,1};
   return result;
 }
