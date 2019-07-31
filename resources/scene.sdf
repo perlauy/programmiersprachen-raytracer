@@ -10,11 +10,17 @@ define	material	white	1	1	1	1	1	1	1	1	1	10
 define shape box rbottom -25 -5 -40 -15 5 -30 green
 define shape sphere gsphere 10 0 -50 5 green
 # transform name transfomation parameter
+<<<<<<< HEAD
 #transform rbottom scale 2 4 2
 #transform rbottom translate 5 0 0
 #transform rbottom rotate 35 0 0 1
 transform rbottom rotate 15 1 0 0
 transform rbottom rotate -50 0 1 0
+=======
+transform rbottom scale 2 4 2
+transform rbottom translate 3 0 2
+transform rbottom rotate 45 1 0 0
+>>>>>>> integrated world_transformation_matrix in load_scene
 # light - from right above
 define light sun -100 -700 0 .2 .5 .2 10
 define light behind 100 10 0 .2 .2 .6 10

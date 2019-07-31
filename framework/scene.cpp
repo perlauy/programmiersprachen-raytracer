@@ -213,7 +213,10 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
         std::string shape_name;
         line_string_stream >> shape_name;
 
+<<<<<<< HEAD
         // maybe we should change to map for shapes because of searching
+=======
+>>>>>>> integrated world_transformation_matrix in load_scene
         auto it = shapes.begin(); ; 
         while((*it)->get_name() != shape_name) ++it;
         std::shared_ptr<Shape> object = *it;
