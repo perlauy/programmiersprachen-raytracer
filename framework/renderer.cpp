@@ -37,8 +37,14 @@ void Renderer::render()
       Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
 
       p.color = trace(r); 
-      //p.color = Color{0.5,0.2,0.8}; //trace(r); 
 
+      // HDR to LDR
+      p.color = Color{
+        p.color.r / (p.color.r + 1),
+        p.color.g / (p.color.g + 1),
+        p.color.b / (p.color.b + 1)
+      };
+      
       write(p);
     }
   }
@@ -190,6 +196,5 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
   };
   result += ambient_light;
 
-  if (result.r > 1 || result.g > 1 || result.b > 1) return Color{1,0,1};
   return result;
 }
