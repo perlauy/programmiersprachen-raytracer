@@ -8,7 +8,7 @@ define shape sphere bsphere 0 0 -100 20 blue
 define shape sphere gsphere 10 0 -50 5 green
 # light - from right above
 define light sun 100 700 0 .2 .2 .2 2
-define light behind 100 10 0 .2 .2 .2 2
+define light behind 10 10 -40 .2 .2 .2 2
 ambient .1 .1 .1
 # camera
 define camera eye 45.0

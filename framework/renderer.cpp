@@ -141,7 +141,7 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
     float angle = glm::angle(normal, l);
 
 
-    glm::vec3 r = glm::reflect(l, normal);
+    //glm::vec3 r = glm::reflect(l, normal);
     glm::vec3 v = glm::normalize(-hp.direction);
 
     // (loop the objects and see if l intersects with another object)
@@ -166,12 +166,17 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
           light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_l_normal)
         };
         result += diffuse_light;
-        
-
-      // Phong
-      // TODO: reflection. test
-      //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
-
+        // Phong
+        // TODO: reflection. test
+        //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
+        glm::vec3 reflect_vector = 2*glm::dot(normal,l)*normal - l;
+        float ref_fact = std::pow(glm::dot(reflect_vector, v), hp.material_->m);
+        Color reflect_light{
+          light_it->brightness * light_it->color.r * hp.material_->ks.r * ref_fact,
+          light_it->brightness * light_it->color.g * hp.material_->ks.g * ref_fact,
+          light_it->brightness * light_it->color.b * hp.material_->ks.b * ref_fact
+        };
+        result += reflect_light;
       }
       
     }
