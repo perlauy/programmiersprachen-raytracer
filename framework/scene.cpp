@@ -26,6 +26,7 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
   std::vector<std::shared_ptr<Shape>> shapes;
   std::vector<Light> lights;
   std::map<std::string, Camera> cameras;
+  Color ambient{};
 
   if (scene_file.is_open()) {
 
@@ -178,7 +179,17 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
 
 
         } 
-      } else if ("render" == identifier) {
+      } else if ("ambient" == identifier) {
+          float r, g, b;
+          line_string_stream >> r;
+          line_string_stream >> g;
+          line_string_stream >> b;
+
+          ambient = {r, g, b};
+
+          std::cout << "Ambient found: " << ambient << std::endl;
+
+        } else if ("render" == identifier) {
         std::string camera_name;
         line_string_stream >> camera_name;
         Camera& camera = cameras.find(camera_name)->second;
@@ -203,7 +214,7 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
 
     // Since the object Scene is being created on return, when the function is over,
     // the memory is deleted. So the return type was changed.
-    return Scene{materials, shapes, lights, cameras};
+    return Scene{materials, shapes, lights, ambient, cameras};
 
     scene_file.close();
   }

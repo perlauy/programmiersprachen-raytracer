@@ -27,8 +27,9 @@ struct Scene {
   std::map<std::string, std::shared_ptr<Material>> materials{};
   std::vector<std::shared_ptr<Shape>> objects{};
   std::vector<Light> lights{};
+  Color ambient{0.0f, 0.0f, 0.0f};
   std::map<std::string, Camera> cameras{};
-
+  
 };
 
 //template<typename T>

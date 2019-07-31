@@ -144,19 +144,20 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
     glm::vec3 r = glm::reflect(l, normal);
     glm::vec3 v = glm::normalize(-hp.direction);
 
-    // TODO: check if it's in shadow
     // (loop the objects and see if l intersects with another object)
     bool visable = true;
     for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
       if (*it != s) {
         Ray r{hp.point, l};
         HitPoint result = (*it)->intersect(r);
-        if (result.hit and result.t > 0) visable = false;
+        if (result.hit && result.t > 0) visable = false;
       }
     }
 
     if (visable) {
-      // Diffuse, if light is visible   Ip * kd (l·n)
+      
+      // DIFFUSE LIGHT
+      // Ip * kd (l·n)
       float angle_l_normal = glm::angle(l, normal);
       if (0 <= std::cos(angle_l_normal)) {
         Color diffuse_light{
@@ -165,26 +166,25 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
           light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_l_normal)
         };
         result += diffuse_light;
-      }
-      
-      /*
-      Color normal_map{
-        0.0f,
-        std::cos(glm::angle(normal, v)),
-        std::cos(glm::angle(normal, v))/2.0f
-      };
-      result += normal_map;
-      */  
+        
 
       // Phong
       // TODO: reflection. test
       //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
 
-      // TODO: add ambient light to the scene
-      // intensity[i] += scene_.ambient_light.intensity[i] * material.ka
-
+      }
+      
     }
   }
-  if (result.r > 1 or result.g > 1 or result.b > 1) return Color{1,0,1};
+
+  // AMBIENT LIGHT
+  Color ambient_light{
+      scene_.ambient.r * hp.material_->ka.r,
+      scene_.ambient.g * hp.material_->ka.g,
+      scene_.ambient.b * hp.material_->ka.b
+  };
+  result += ambient_light;
+
+  if (result.r > 1 || result.g > 1 || result.b > 1) return Color{1,0,1};
   return result;
 }
