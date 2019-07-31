@@ -4,7 +4,7 @@
 // Creates a Material Dummy. Tested with others?
 // Making it specific for materials
 // Maybe we can overload it if needed?
-template<typename T>
+/* template<typename T>
 std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std::shared_ptr<T>> const& set) {
   // O(logN)
   // Must create a new material (temporary)
@@ -13,19 +13,19 @@ std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std
   return it == set.end() ?
     nullptr :
     *it;
-}
+}*/
 
-Scene open_scene(std::string const& filename) {
+Scene open_scene(std::string const& filename, RenderInformation& r) {
 
   std::cout << "- loading sdf - " << std::endl;
 
   std::string line_buffer;
   std::ifstream scene_file(filename);
 
-  std::set<std::shared_ptr<Material>> materials;
-  std::set<std::shared_ptr<Shape>> shapes;
-  std::set<Light> lights;
-  std::set<Camera> cameras;
+  std::map<std::string, std::shared_ptr<Material>> materials;
+  std::vector<std::shared_ptr<Shape>> shapes;
+  std::vector<Light> lights;
+  std::map<std::string, Camera> cameras;
 
   if (scene_file.is_open()) {
 
@@ -73,7 +73,7 @@ Scene open_scene(std::string const& filename) {
           );
           
       // Insert the material into the set
-          materials.insert(new_material);
+          materials.insert({material_name, new_material});
 
           std::cout << "Material created: " << material_name << std::endl;
 
@@ -99,12 +99,12 @@ Scene open_scene(std::string const& filename) {
             std::string material_name;
             line_string_stream >> material_name;
 
-            std::shared_ptr<Material> material = find_name_in_set(material_name, materials);
+            std::shared_ptr<Material> material = materials.find(material_name)->second;
 
             Box box{shape_name, material, glm::vec3{x_min,y_min,z_min}, glm::vec3{x_max,y_max,z_max}};
             auto new_shape = std::make_shared<Box>(box);
 
-            shapes.insert(new_shape);
+            shapes.push_back(new_shape);
 
             std::cout << "Box created: " << shape_name << std::endl;
 
@@ -120,12 +120,12 @@ Scene open_scene(std::string const& filename) {
             std::string material_name;
             line_string_stream >> material_name;
 
-            std::shared_ptr<Material> material = find_name_in_set(material_name, materials);
+            std::shared_ptr<Material> material = materials.find(material_name)->second;
 
             Sphere sphere{shape_name, material, glm::vec3{x,y,z}, radius};
             auto new_shape = std::make_shared<Sphere>(sphere);
 
-            shapes.insert(new_shape);
+            shapes.push_back(new_shape);
 
             std::cout << "Sphere created: " << shape_name << std::endl;
           }
@@ -148,14 +148,14 @@ Scene open_scene(std::string const& filename) {
           float brightness;
           line_string_stream >> brightness;
 
-          Light new_lights{
+          Light new_light{
             light_name,
             glm::vec3 { x, y, z },
             Color { r, g, b },
             brightness
           };
 
-          lights.insert(new_lights);
+          lights.push_back(new_light);
 
           std::cout << "Light created: " << light_name << std::endl;
 
@@ -172,10 +172,29 @@ Scene open_scene(std::string const& filename) {
             fov_x
           };
 
-          cameras.insert(camera);
+          cameras.insert({camera_name, camera});
 
           std::cout << "Camera created: " << camera_name << std::endl;
-        }
+
+
+        } 
+      } else if ("render" == identifier) {
+        std::string camera_name;
+        line_string_stream >> camera_name;
+        Camera& camera = cameras.find(camera_name)->second;
+
+        std::string file_name;
+        line_string_stream >> file_name;
+          
+        unsigned int width;
+        line_string_stream >> width;
+        unsigned int height;
+        line_string_stream >> height;
+
+        r = RenderInformation{std::make_shared<Camera>(camera), file_name, width, height};
+
+        std::cout << "Render Information loaded for: " << camera_name << std::endl;
+        
       }
     // TODO: read last line with "render...." and return to references (?)
     }
@@ -190,4 +209,6 @@ Scene open_scene(std::string const& filename) {
   }
 
   else std::cout << "Unable to open file";
+
+  return Scene{};
 }

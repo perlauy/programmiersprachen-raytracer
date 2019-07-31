@@ -8,22 +8,26 @@
 
 int main(int argc, char* argv[])
 {
+  std::string sdf_path = "../../resources/scene.sdf";
   unsigned const image_width = 800;
   unsigned const image_height = 600;
   std::string const filename = "./checkerboard.ppm";
+  if (argc > 1) {
+    sdf_path = argv[1];
+  }
 
-  Scene scene_loaded = open_scene("scene.sdf");
-
-  //TODO: can't manage to make it work
-  //Camera camera = find_name_in_set("eye", scene_loaded.cameras);
   Camera camera{"eye"};
 
-  Renderer renderer{image_width, image_height, filename, scene_loaded, camera};
+  RenderInformation info{};//{camera, filename, image_width, image_height};
+
+  Scene scene_loaded = open_scene(sdf_path, info);
+
+  Renderer renderer{info.width, info.height, info.filename, scene_loaded, *info.camera};
 
   //create separate thread to see updates of pixels while rendering
   std::thread render_thread([&renderer]() {renderer.render();});
 
-  Window window{{image_width, image_height}};
+  Window window{{info.width, info.height}};
 
   while (!window.should_close()) {
     if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {

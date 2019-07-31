@@ -36,7 +36,8 @@ void Renderer::render()
       // TODO: test camera movements
       Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
 
-      p.color = trace(r);
+      p.color = trace(r); 
+      //p.color = Color{0.5,0.2,0.8}; //trace(r); 
 
       write(p);
     }
@@ -110,6 +111,7 @@ Color Renderer::trace(Ray const& r) const {
   // Now that we know which object and which material is, calculate light
   // TODO
   std::shared_ptr<Material> mat = hp.material_;
+
 
   if (hp.hit && mat != nullptr) {
     return shade(s, hp);
