@@ -39,11 +39,16 @@ void Renderer::render()
       p.color = trace(r); 
 
       // HDR to LDR
+      //float c_sum = (p.color.r+ p.color.b + p.color.g)/3;
+      //p.color = p.color * ((c_sum)/(c_sum + 1));
+
+      // HDR to LDR
       p.color = Color{
-        p.color.r / (p.color.r + 1),
-        p.color.g / (p.color.g + 1),
-        p.color.b / (p.color.b + 1)
+      p.color.r / (p.color.r + 1),
+      p.color.g / (p.color.g + 1),
+      p.color.b / (p.color.b + 1)
       };
+      
       
       write(p);
     }
@@ -190,9 +195,9 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
   // AMBIENT LIGHT
   Color ambient_light{
-      scene_.ambient.r * hp.material_->ka.r,
-      scene_.ambient.g * hp.material_->ka.g,
-      scene_.ambient.b * hp.material_->ka.b
+    scene_.ambient.r * hp.material_->ka.r,
+    scene_.ambient.g * hp.material_->ka.g,
+    scene_.ambient.b * hp.material_->ka.b
   };
   result += ambient_light;
 
