@@ -110,6 +110,7 @@ glm::mat4 Renderer::get_camera_matrix() const {
 Color Renderer::trace(Ray const& r, float priority) const {
   float epsilon = 0.01;
   
+  if (priority > 0.01) {
   // Create a default hit point, which will have the info
   HitPoint hp{};
   std::shared_ptr<Shape> s;  
@@ -131,13 +132,14 @@ Color Renderer::trace(Ray const& r, float priority) const {
     if (mat->opacity < 1) {
       Color opaque = shade(s, hp) * mat->opacity; 
       glm::vec3 resulting_direction = r.direction;//glm::normalize(r.direction + glm::vec3{0.2,0.,0.1});
-      Color transparent = trace(Ray{hp.point, resulting_direction }, 1 - mat->opacity) * 1;//(1 - mat->opacity);
+      Color transparent = trace(Ray{hp.point, resulting_direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
       return opaque + transparent;
     } else return shade(s, hp);
     //return mat->ka;
   } else {
     // TODO: define background color    
     return Color{1.0f,1.0f,0.6f};
+  }
   }
 
 };
