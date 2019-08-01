@@ -100,3 +100,13 @@ std::ostream& Box::print(std::ostream& os) const {
   if (material_ != nullptr) os << "Material: " << material_->name;
   return os;
 }
+
+std::ofstream& Box::sdf_print(std::ofstream& ofs) const {
+  ofs << "define shape box "
+  << name_ << " "
+  << minimum_[0] << " " << minimum_[1] << " " << minimum_[2] << " "
+  << maximum_[0] << " " << maximum_[1] << " " << maximum_[2] << " "
+  << material_->name << " "
+  << "\n";
+  return ofs;
+}

@@ -20,6 +20,7 @@ class Box : public Shape {
     glm::vec3 get_normal(glm::vec3 const& point) const override;
 
     std::ostream& print(std::ostream& os) const override;
+    std::ofstream& sdf_print(std::ofstream& ofs) const override;
 
   private:
     bool hit_test(HitPoint& result, Ray const& ray, float fixed_value, int index) const;

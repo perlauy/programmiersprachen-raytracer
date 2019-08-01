@@ -1,9 +1,15 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
+// Project files
 #include "color.hpp"
+
+// Standard libraries
 #include <memory>
 #include <string>
+#include <fstream>
+#include <sstream>
+
 
 struct Material {
 
@@ -11,6 +17,17 @@ struct Material {
   {
     os << m.name << ": " << m.ka << "\t" << m.kd << "\t" << m.ks << "\t" << m.m << "\n";
     return os;
+  }
+
+  friend std::ofstream& operator<<(std::ofstream& ofs, Material const& m)
+  {
+    ofs << "define material "
+    << m.name << " "
+    << m.ka.r << " " << m.ka.g << " " << m.ka.b << " "
+    << m.kd.r << " " << m.kd.g << " " << m.kd.b << " "
+    << m.ks.r << " " << m.ks.g << " " << m.ks.b << " "
+    << m.m << "\n";
+    return ofs;
   }
   
   Material() {

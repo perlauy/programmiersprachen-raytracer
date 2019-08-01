@@ -37,4 +37,13 @@ struct Scene {
 
 Scene open_scene(std::string const& filename, RenderInformation& r);
 
+/**
+  * Takes a destination file path and a scene object, and saves it as SDF
+  * @param filepath (std::string const&) full path to which to save the file
+  * @param scene (Scene) scene object to save as SDF
+  * @param render_info (RenderInformation) object with the necessary information
+  * @return int 0 if it was saved, 1 if some error was encountered
+  */
+int write_scene(std::string const& filepath, Scene const& scene, RenderInformation const& render_info);
+
 #endif //#define SCENE_HPP

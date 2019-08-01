@@ -26,6 +26,11 @@ std::ostream& operator<<(std::ostream& os, Shape const& s) {
   return cerberus ? s.print(os) : os;
 }
 
+std::ofstream& operator<<(std::ofstream& ofs, std::shared_ptr<Shape> const& s) {
+  return s->sdf_print(ofs);
+}
+
+
 bool operator<(std::shared_ptr<Shape> const& lhs, std::shared_ptr<Shape> const& rhs) {
   return lhs->name_ < rhs->name_;
 };

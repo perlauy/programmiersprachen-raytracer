@@ -1,20 +1,5 @@
 #include "scene.hpp"
 
-// !!!
-// Creates a Material Dummy. Tested with others?
-// Making it specific for materials
-// Maybe we can overload it if needed?
-/* template<typename T>
-std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std::shared_ptr<T>> const& set) {
-  // O(logN)
-  // Must create a new material (temporary)
-  std::shared_ptr<T> search_dummy = std::make_shared<T>(search_name, Color{}, Color{}, Color{}, 0.0f);
-  auto it = set.find(search_dummy);
-  return it == set.end() ?
-    nullptr :
-    *it;
-}*/
-
 Scene open_scene(std::string const& filename, RenderInformation& r) {
 
   std::cout << "- loading sdf - " << std::endl;
@@ -222,4 +207,56 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
   else std::cout << "Unable to open file";
 
   return Scene{};
+}
+
+
+
+
+int write_scene(std::string const& filepath, Scene const& scene, RenderInformation const& render_info) {
+
+  std::cout << "- Writing sdf to - " << filepath << std::endl;
+
+  std::string line_buffer;
+  std::ofstream scene_file(filepath);
+  scene_file << "# Writing scene\n";
+
+  if (scene_file.is_open()) {
+
+    // Save materials
+    for (auto it = scene.materials.begin(); it != scene.materials.end(); ++it) {
+      scene_file << *(it->second);
+    }
+
+    // Save shapes
+    for (auto it = scene.objects.begin(); it != scene.objects.end(); ++it) {
+      scene_file << *it;
+    }
+
+    // Save lights
+    for (auto it = scene.lights.begin(); it != scene.lights.end(); ++it) {
+      scene_file << *it;
+    }
+
+    scene_file << "ambient " << scene.ambient.r << " " << scene.ambient.g << " " << scene.ambient.b << std::endl;
+
+    // Save cameras
+    for (auto it = scene.cameras.begin(); it != scene.cameras.end(); ++it) {
+      scene_file << it->second;
+    }
+
+    scene_file << "render "
+    << render_info.camera->name << " " 
+    << render_info.filename << " "
+    << render_info.width << " "
+    << render_info.height << std::endl;
+
+    scene_file.close();
+    return 0;
+  }
+
+  else {
+    std::cout << "Unable to open file";
+    return 1;
+  }
+
 }

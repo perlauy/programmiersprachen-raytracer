@@ -18,6 +18,8 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 
 class Shape {
@@ -36,6 +38,7 @@ class Shape {
     virtual glm::vec3 get_normal(glm::vec3 const& point) const = 0;
 
     virtual std::ostream& print(std::ostream& os) const;
+    virtual std::ofstream& sdf_print(std::ofstream& ofs) const = 0;
 
     friend bool operator<(std::shared_ptr<Shape> const& lhs, std::shared_ptr<Shape> const& rhs);
 
@@ -45,5 +48,6 @@ class Shape {
 };
 
 std::ostream& operator<<(std::ostream& os, Shape const& s);
+std::ofstream& operator<<(std::ofstream& ofs, std::shared_ptr<Shape> const& s);
 
 #endif

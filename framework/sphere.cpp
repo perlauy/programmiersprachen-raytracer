@@ -33,6 +33,17 @@ std::ostream& Sphere::print(std::ostream& os) const {
   return os;
 }
 
+std::ofstream& Sphere::sdf_print(std::ofstream& ofs) const {
+  ofs << "define shape sphere "
+  << name_ << " "
+  << center_[0] << " " << center_[1] << " " << center_[2] << " "
+  << radius_ << " "
+  << material_->name << " "
+  << "\n";
+  return ofs;
+}
+
+
 HitPoint Sphere::intersect(Ray const& ray) const {
 
   glm::vec3 normalized_direction = glm::normalize(ray.direction);

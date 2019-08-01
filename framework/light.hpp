@@ -9,10 +9,21 @@
 
 // Standard libraries
 #include <string>
-
+#include <fstream>
+#include <sstream>
 
 struct Light {
-  // TO BE IMPLEMENTED
+  
+  friend std::ofstream& operator<<(std::ofstream& ofs, Light const& l)
+  {
+    ofs << "define light "
+    << l.name << " "
+    << l.pos[0] << " " << l.pos[1] << " " << l.pos[2] << " "
+    << l.color.r << " " << l.color.g << " " << l.color.b << " "
+    << l.brightness << " "
+    << "\n";
+    return ofs;
+  }
 
   friend bool operator<(Light const& lhs, Light const& rhs) {
     return lhs.name < rhs.name;
