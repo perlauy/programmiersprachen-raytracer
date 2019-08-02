@@ -12,7 +12,7 @@ define shape sphere bsphere 0 0 0 5 green
 # transform name transfomation parameter
 transform bsphere translate -10 0 -50
 #transform bsphere rotate -30 0.1 1 0.2
-transform bsphere rotate -15 0 1 0
+transform bsphere rotate 45 0 0 1
 transform bsphere scale 1 2 1
 #transform bsphere rotate 9 1 1
 transform rbottom translate 10 0 -50

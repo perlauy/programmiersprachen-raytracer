@@ -37,12 +37,12 @@ HitPoint Sphere::intersect(Ray const& original_ray) const {
 
   Ray trans_ray = transform_ray(Shape::world_transformation_inv_, original_ray);
   float t = HUGE_VALF;
-  //glm::vec3 normalized_direction = glm::normalize(trans_ray.direction);
-  //float ratio = trans_ray.direction[0] / normalized_direction[0];
+  glm::vec3 normalized_direction = glm::normalize(trans_ray.direction);
+  float ratio = trans_ray.direction[0] / normalized_direction[0];
 
   bool is_intersected_distance = glm::intersectRaySphere(
     trans_ray.origin,
-    trans_ray.direction,
+    normalized_direction,
     center_,
     radius_ * radius_,
     t
@@ -50,7 +50,7 @@ HitPoint Sphere::intersect(Ray const& original_ray) const {
 
   if (is_intersected_distance) std::cout << "Kugel";
   
-  glm::vec3 resulting_point = trans_ray.origin + t * trans_ray.direction;
+  glm::vec3 resulting_point = trans_ray.origin + t * ratio * trans_ray.direction;
 
   return HitPoint{
     is_intersected_distance,
