@@ -62,7 +62,7 @@ HitPoint Box::intersect(Ray const& ray) const {
 // }
 
 bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) const {
-  glm::vec3 normalized_direction = glm::normalize(ray.direction);
+  glm::vec3 normalized_direction = ray.direction;
 
   if (ray.direction[index] != 0) {
     // calculates t for bringing the resulting point to fixed value in index index
@@ -87,7 +87,7 @@ bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) con
           name_,
           material_,
           transform_point(Shape::world_transformation_, resulting_point),
-          transform_point(Shape::world_transformation_, normalized_direction)
+          transform_vector(Shape::world_transformation_, normalized_direction)
         };
         return true;
       }
@@ -100,27 +100,28 @@ glm::vec3 Box::get_normal(glm::vec3 const& point) const {
   glm::vec3 trans_point = transform_point(Shape::world_transformation_inv_, point);
   glm::vec3 result{};
   float epsilon = 0.01;
-  if ((trans_point[0] <= minimum_[0] + epsilon) && (point[0] >= minimum_[0] - epsilon)) {
-    result = {-1.0f,0.0f,0.0f};
+  if ((trans_point[0] <= minimum_[0] + epsilon) && (trans_point[0] >= minimum_[0] - epsilon)) {
+    //result = {-1.0f,0.0f,0.0f};
     std::cout << "0" << std::endl;
-  } else if ((trans_point[0] <= maximum_[0] + epsilon) && (point[0] >= maximum_[0] - epsilon)) {
+  } else if ((trans_point[0] <= maximum_[0] + epsilon) && (trans_point[0] >= maximum_[0] - epsilon)) {
     result = {1.0f,0.0f,0.0f};
-    std::cout << "1" << std::endl;
-  } else if ((trans_point[1] <= minimum_[1] + epsilon) &&  (point[1] >= minimum_[1] - epsilon)) {
+    //std::cout << "1" << std::endl;
+  } else if ((trans_point[1] <= minimum_[1] + epsilon) &&  (trans_point[1] >= minimum_[1] - epsilon)) {
     result = {0.0f,-1.0f,0.0f};
-    std::cout << "2" << std::endl;
-  } else if ((trans_point[1] <= maximum_[1] + epsilon) && (point[1] >= maximum_[1] - epsilon)) {
+    //std::cout << "2" << std::endl;
+  } else if ((trans_point[1] <= maximum_[1] + epsilon) && (trans_point[1] >= maximum_[1] - epsilon)) {
     result = {0.0f,1.0f,0.0f};
-    std::cout << "3" << std::endl;
-  } else if ((trans_point[2] <= minimum_[2] + epsilon) && (point[2] >= minimum_[2] - epsilon)) {
+    //std::cout << "3" << std::endl;
+  } else if ((trans_point[2] <= minimum_[2] + epsilon) && (trans_point[2] >= minimum_[2] - epsilon)) {
     result = {0.0f,0.0f,-1.0f};
     //std::cout << "4" << std::endl;
-  } else if ((trans_point[2] <= maximum_[2] + epsilon) && (point[2] >= maximum_[2] - epsilon)) {
+  } else if ((trans_point[2] <= maximum_[2] + epsilon) && (trans_point[2] >= maximum_[2] - epsilon)) {
     result = {0.0f,0.0f,1.0f};
     //std::cout << "5" << std::endl;
   };
-  result = glm::normalize(transform_point(Shape::world_transformation_, result));
-  std::cout << "[ " << result[0] << ", " << result[1] << ", " << result[2]  << " ]" << std::endl;
+  if (glm::length(result) == 0) std::cout << "möp";
+  result = transform_vector(glm::transpose(Shape::world_transformation_inv_), result);
+  //std::cout << "[ " << result[0] << ", " << result[1] << ", " << result[2]  << " ]" << std::endl;
   return result;
 }
 
