@@ -210,6 +210,7 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
         std::string shape_name;
         line_string_stream >> shape_name;
 
+        // maybe we should change to map for shapes because of searching
         auto it = shapes.begin(); ; 
         while((*it)->get_name() != shape_name) ++it;
         std::shared_ptr<Shape> object = *it;

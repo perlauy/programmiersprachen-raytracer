@@ -57,3 +57,15 @@ std::ostream& operator<<(std::ostream& os, Shape const& s) {
 bool operator<(std::shared_ptr<Shape> const& lhs, std::shared_ptr<Shape> const& rhs) {
   return lhs->name_ < rhs->name_;
 };
+
+Ray transform_ray(glm::mat4 const& mat , Ray const& ray) {
+  glm::vec3 new_origin = transform_point(mat, ray.origin);
+  glm::vec3 new_direction = transform_point(mat, ray.direction);
+  return Ray{new_origin, glm::normalize(new_direction)};
+}
+
+glm::vec3 transform_point(glm::mat4 const& mat , glm::vec3 const& vector) {
+  glm::vec4 new_vector{vector, 1};
+  new_vector = mat * new_vector;
+  return glm::vec3{new_vector};
+}
