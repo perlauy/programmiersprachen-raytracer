@@ -92,8 +92,8 @@ Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) cons
 
 // generates transformation matrix
 glm::mat4 Renderer::get_camera_matrix() const {
-  glm::vec3 vector_n(camera_->direction);
-  glm::vec3 vector_u = glm::cross(glm::normalize(vector_n), glm::normalize(camera_->up);
+  glm::vec3 vector_n(glm::normalize(camera_->direction));
+  glm::vec3 vector_u = glm::cross(vector_n, glm::normalize(camera_->up));
 
   // If the vector is (0,0,0), normalizing it results in error, so first we check magnitude
   vector_u = glm::length(vector_u) != 0 ? glm::normalize(vector_u) : vector_u;
