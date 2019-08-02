@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   for (int t = 0; t / FPS < 2.0f; ++t) {
     // ANIMATE STH
     Camera& camera = scene_loaded.cameras.find(camera_name)->second;
-    camera.direction[0] += t;
+    camera.direction[0] += t / 100.0f;
 
     // Get next scene file name
     std::ostringstream os;

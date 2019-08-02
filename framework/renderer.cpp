@@ -24,7 +24,7 @@ void Renderer::render()
 {
   std::size_t const checker_pattern_size = 20;
 
-  glm::mat4 camera_transform_matrix{};
+  glm::mat4 camera_transform_matrix = get_camera_matrix();
 
   for (unsigned y = 0; y < height_; ++y) {
     for (unsigned x = 0; x < width_; ++x) {
@@ -44,9 +44,9 @@ void Renderer::render()
 
       // HDR to LDR
       p.color = Color{
-      p.color.r / (p.color.r + 1),
-      p.color.g / (p.color.g + 1),
-      p.color.b / (p.color.b + 1)
+        p.color.r / (p.color.r + 1),
+        p.color.g / (p.color.g + 1),
+        p.color.b / (p.color.b + 1)
       };
       
       
@@ -74,10 +74,11 @@ void Renderer::write(Pixel const& p)
 }
 
 // computes the ray from eye to pixel
+// Uses camera's coordinates system (position {0,0,0}, direction{0,0,-1})
 Ray Renderer::compute_camera_ray(Pixel const& p) const {
   float fov_distance = (width_ / 2.0f) / std::tan(camera_->fov_x * M_PI / 360.0f);
   glm::vec3 direction{p.x - (width_ / 2.0f), p.y - (height_ / 2.0f), -fov_distance};
-  Ray r{camera_->position, glm::normalize(direction)};
+  Ray r{glm::vec3{0,0,0}, glm::normalize(direction)};
   return r;
 };
 
@@ -91,11 +92,13 @@ Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) cons
 
 // generates transformation matrix
 glm::mat4 Renderer::get_camera_matrix() const {
-  glm::vec3 vector_n{0,0,-1};
-  glm::vec3 vector_u = glm::normalize(camera_->up) * vector_n;
-  vector_u = glm::normalize(vector_u);
-  glm::vec3 vector_v = vector_u * vector_n;
-  vector_v = glm::normalize(vector_v);
+  glm::vec3 vector_n(camera_->direction);
+  glm::vec3 vector_u = glm::cross(glm::normalize(vector_n), glm::normalize(camera_->up);
+
+  // If the vector is (0,0,0), normalizing it results in error, so first we check magnitude
+  vector_u = glm::length(vector_u) != 0 ? glm::normalize(vector_u) : vector_u;
+  glm::vec3 vector_v = glm::cross(vector_u, vector_n);
+  vector_v = glm::length(vector_v) != 0 ? glm::normalize(vector_v) : vector_v;
 
   glm::mat4 matrix{
     {vector_u[0], vector_v[0], -vector_n[0], camera_->position[0]},
@@ -103,6 +106,7 @@ glm::mat4 Renderer::get_camera_matrix() const {
     {vector_u[2], vector_v[2], -vector_n[2], camera_->position[2]},
     {0, 0, 0, 1}
   };
+
   return matrix;
 };
 

@@ -154,9 +154,27 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
           float fov_x;
           line_string_stream >> fov_x;
 
+          float pos_x, pos_y, pos_z;
+          line_string_stream >> pos_x;
+          line_string_stream >> pos_y;
+          line_string_stream >> pos_z;
+
+          float dir_x, dir_y, dir_z;
+          line_string_stream >> dir_x;
+          line_string_stream >> dir_y;
+          line_string_stream >> dir_z;
+
+          float up_x, up_y, up_z;
+          line_string_stream >> up_x;
+          line_string_stream >> up_y;
+          line_string_stream >> up_z;
+
           Camera camera{
             camera_name, 
-            fov_x
+            fov_x,
+            glm::vec3{pos_x, pos_y, pos_z},
+            glm::vec3{dir_x, dir_y, dir_z},
+            glm::vec3{up_x, up_y, up_z}
           };
 
           cameras.insert({camera_name, camera});
