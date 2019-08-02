@@ -3,6 +3,7 @@
 Scene open_scene(std::string const& filename, RenderInformation& r) {
 
   std::cout << "- loading sdf - " << std::endl;
+  std::cout << filename << std::endl;
 
   std::string line_buffer;
   std::ifstream scene_file(filename);

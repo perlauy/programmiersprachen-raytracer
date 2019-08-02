@@ -10,7 +10,7 @@
 
 #include "renderer.hpp"
 
-Renderer::Renderer(unsigned w, unsigned h, std::string const& file, Scene const& s, Camera const& c) :
+Renderer::Renderer(unsigned w, unsigned h, std::string const& file, Scene const& s, std::shared_ptr<Camera> const& c) :
   width_(w),
   height_(h),
   color_buffer_(w*h, Color{0.0, 0.0, 0.0}),
@@ -75,9 +75,9 @@ void Renderer::write(Pixel const& p)
 
 // computes the ray from eye to pixel
 Ray Renderer::compute_camera_ray(Pixel const& p) const {
-  float fov_distance = (width_ / 2.0f) / std::tan(camera_.fov_x * M_PI / 360.0f);
+  float fov_distance = (width_ / 2.0f) / std::tan(camera_->fov_x * M_PI / 360.0f);
   glm::vec3 direction{p.x - (width_ / 2.0f), p.y - (height_ / 2.0f), -fov_distance};
-  Ray r{camera_.position, glm::normalize(direction)};
+  Ray r{camera_->position, glm::normalize(direction)};
   return r;
 };
 
@@ -92,15 +92,15 @@ Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) cons
 // generates transformation matrix
 glm::mat4 Renderer::get_camera_matrix() const {
   glm::vec3 vector_n{0,0,-1};
-  glm::vec3 vector_u = glm::normalize(camera_.up) * vector_n;
+  glm::vec3 vector_u = glm::normalize(camera_->up) * vector_n;
   vector_u = glm::normalize(vector_u);
   glm::vec3 vector_v = vector_u * vector_n;
   vector_v = glm::normalize(vector_v);
 
   glm::mat4 matrix{
-    {vector_u[0], vector_v[0], -vector_n[0], camera_.position[0]},
-    {vector_u[1], vector_v[1], -vector_n[1], camera_.position[1]},
-    {vector_u[2], vector_v[2], -vector_n[2], camera_.position[2]},
+    {vector_u[0], vector_v[0], -vector_n[0], camera_->position[0]},
+    {vector_u[1], vector_v[1], -vector_n[1], camera_->position[1]},
+    {vector_u[2], vector_v[2], -vector_n[2], camera_->position[2]},
     {0, 0, 0, 1}
   };
   return matrix;

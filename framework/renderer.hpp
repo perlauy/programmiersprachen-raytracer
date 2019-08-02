@@ -33,12 +33,13 @@
 #include <cmath>
 #include <string>
 #include <array>
+#include <memory>
 
 
 class Renderer
 {
 public:
-  Renderer(unsigned w, unsigned h, std::string const& file, Scene const& s, Camera const& c);
+  Renderer(unsigned w, unsigned h, std::string const& file, Scene const& s, std::shared_ptr<Camera> const& c);
 
   void render();
   void write(Pixel const& p);
@@ -56,7 +57,7 @@ private:
   PpmWriter ppm_;
 
   Scene scene_;
-  Camera camera_;
+  std::shared_ptr<Camera> camera_;
 
   Ray compute_camera_ray(Pixel const& p) const;
   Color trace(Ray const& r) const;

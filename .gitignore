@@ -31,3 +31,4 @@ _bkp
 *.sublime-workspace
 .vs
 .vscode
+output
