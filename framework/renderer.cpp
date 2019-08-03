@@ -118,7 +118,7 @@ Color Renderer::trace(Ray const& r) const {
   std::shared_ptr<Shape> s;  
 
   for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
-    HitPoint result = (*it)->intersect(r);
+    HitPoint result = (*it)->intersect(r/* s->apply_world_transformation(r)*/);
     if (result.hit && result.t < hp.t) {
       hp = result;
       s = *it;
@@ -152,11 +152,10 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
     // Get ray l and angle n_r 
     glm::vec3 l = glm::normalize(light_it->pos - hp.point);
-    //float angle normal,l
+    // float angle normal,l
     float angle = glm::angle(normal, l);
 
-
-    //glm::vec3 r = glm::reflect(l, normal);
+    // glm::vec3 r = glm::reflect(l, normal);
     glm::vec3 v = glm::normalize(-hp.direction);
 
     // (loop the objects and see if l intersects with another object)
