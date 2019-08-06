@@ -36,7 +36,7 @@ void Renderer::render()
       // TODO: test camera movements
       Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
 
-      p.color = trace(r); 
+      p.color = trace(r, std::shared_ptr<Shape>{});
 
       // HDR to LDR
       //float c_sum = (p.color.r+ p.color.b + p.color.g)/3;
@@ -107,17 +107,19 @@ glm::mat4 Renderer::get_camera_matrix() const {
 };
 
 // test ray on intersection
-Color Renderer::trace(Ray const& r) const {
+Color Renderer::trace(Ray const& r, std::shared_ptr<Shape> const& retrace) const {
   
   // Create a default hit point, which will have the info
   HitPoint hp{};
   std::shared_ptr<Shape> s;  
 
   for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
-    HitPoint result = (*it)->intersect(r);
-    if (result.hit && result.t < hp.t) {
-      hp = result;
-      s = *it;
+    if (!(retrace) || (*it != retrace)) {
+      HitPoint result = (*it)->intersect(r);
+      if (result.hit && result.t < hp.t) {
+        hp = result;
+        s = *it;
+      }
     }
   }
 
@@ -127,7 +129,11 @@ Color Renderer::trace(Ray const& r) const {
 
 
   if (hp.hit && mat != nullptr) {
-    return shade(s, hp);
+    if (mat->opacity < 1) {
+      Color opaque = shade(s, hp) * mat->opacity; 
+      Color transparent = trace(Ray{hp.point, r.direction}, s) * 1;//(1 - mat->opacity);
+      return opaque + transparent;
+    } else return shade(s, hp);
     //return mat->ka;
   } else {
     // TODO: define background color    
@@ -157,15 +163,18 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
     // (loop the objects and see if l intersects with another object)
     bool visable = true;
+    float opaque_level = 0;
     for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
       if (*it != s) {
         Ray r{hp.point, l};
         HitPoint result = (*it)->intersect(r);
-        if (result.hit && result.t > 0) visable = false;
+        if (result.hit && result.t > 0) opaque_level += result.material_->opacity;
       }
     }
 
-    if (visable) {
+    if (opaque_level < 1) {
+
+      Color interim_result;
       
       // DIFFUSE LIGHT
       // Ip * kd (l·n)
@@ -176,7 +185,7 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
           light_it->brightness * light_it->color.g * hp.material_->kd.g * std::cos(angle_l_normal),
           light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_l_normal)
         };
-        result += diffuse_light;
+        result += diffuse_light * (1-opaque_level);
         // Phong
         // TODO: reflection. test
         //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
@@ -187,8 +196,10 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
           light_it->brightness * light_it->color.g * hp.material_->ks.g * ref_fact,
           light_it->brightness * light_it->color.b * hp.material_->ks.b * ref_fact
         };
-        result += reflect_light;
+        result += reflect_light * (1-opaque_level);
       }
+      //OPACITY
+
       
     }
   }
