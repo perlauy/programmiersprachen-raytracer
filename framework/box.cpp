@@ -101,13 +101,8 @@ glm::vec3 Box::get_normal(glm::vec3 const& point) const {
   glm::vec3 result{};
   float epsilon = 0.01;
   if ((trans_point[0] <= minimum_[0] + epsilon) && (trans_point[0] >= minimum_[0] - epsilon)) {
-<<<<<<< HEAD
     result = {-1.0f,0.0f,0.0f};
     //std::cout << "0" << std::endl;
-=======
-    //result = {-1.0f,0.0f,0.0f};
-    std::cout << "0" << std::endl;
->>>>>>> transformation and shade
   } else if ((trans_point[0] <= maximum_[0] + epsilon) && (trans_point[0] >= maximum_[0] - epsilon)) {
     result = {1.0f,0.0f,0.0f};
     //std::cout << "1" << std::endl;
@@ -125,16 +120,11 @@ glm::vec3 Box::get_normal(glm::vec3 const& point) const {
     //std::cout << "5" << std::endl;
   };
   if (glm::length(result) == 0) std::cout << "möp";
-<<<<<<< HEAD
+
   // inverse because of normal transformation
   result = transform_vector(glm::transpose(Shape::world_transformation_inv_), result);
   //std::cout << "[ " << result[0] << ", " << result[1] << ", " << result[2]  << " ]" << std::endl;
   return glm::normalize(result);
-=======
-  result = transform_vector(glm::transpose(Shape::world_transformation_inv_), result);
-  //std::cout << "[ " << result[0] << ", " << result[1] << ", " << result[2]  << " ]" << std::endl;
-  return result;
->>>>>>> transformation and shade
 }
 
 std::ostream& Box::print(std::ostream& os) const {
