@@ -17,7 +17,7 @@ std::shared_ptr<T> find_name_in_set(std::string const& search_name, std::set<std
 
 Scene open_scene(std::string const& filename, RenderInformation& r) {
 
-  std::cout << "- loading sdf - " << std::endl;
+  std::cout << "- loading sdf " << filename << " - " << std::endl;
 
   std::string line_buffer;
   std::ifstream scene_file(filename);

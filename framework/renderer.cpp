@@ -131,7 +131,7 @@ Color Renderer::trace(Ray const& r) const {
     //return mat->ka;
   } else {
     // TODO: define background color    
-    return Color{0.0f,0.0f,0.0f};
+    return Color{1.0f,1.0f,0.6f};
   }
 
 };
@@ -198,6 +198,7 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
     scene_.ambient.g * hp.material_->ka.g,
     scene_.ambient.b * hp.material_->ka.b
   };
+
   result += ambient_light;
 
   return result;

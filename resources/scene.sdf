@@ -7,14 +7,14 @@ define	material	white	1	1	1	1	1	1	1	1	1	10
 # geometry
 #define shape box rbottom 0 -80 -200 100 80 -100 white
 #define shape sphere bsphere 0 0 -100 20 grey
-define shape box rbottom -30 -10 -70 -10 10 -40 green
+define shape box rbottom -25 -5 -40 -15 5 -30 green
 define shape sphere gsphere 10 0 -50 5 green
 # transform name transfomation parameter
-#transform rbottom scale .2 .4 .2
+#transform rbottom scale 2 4 2
 #transform rbottom translate 5 0 0
-transform rbottom rotate 35 0 0 1
-#transform rbottom rotate 15 1 0 0
-#transform rbottom rotate -45 0 1 0
+#transform rbottom rotate 35 0 0 1
+transform rbottom rotate 15 1 0 0
+transform rbottom rotate -50 0 1 0
 # light - from right above
 define light sun 100 700 0 .2 .5 .2 10
 define light behind 100 10 0 .2 .2 .6 10
