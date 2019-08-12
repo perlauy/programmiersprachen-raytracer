@@ -123,7 +123,7 @@ glm::vec3 Box::get_normal(glm::vec3 const& point) const {
   // inverse because of normal transformation
   result = transform_vector(glm::transpose(Shape::world_transformation_inv_), result);
   std::cout << "[ " << result[0] << ", " << result[1] << ", " << result[2]  << " ]" << std::endl;
-  return result;
+  return glm::normalize(result);
 }
 
 std::ostream& Box::print(std::ostream& os) const {
