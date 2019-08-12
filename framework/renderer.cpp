@@ -36,7 +36,7 @@ void Renderer::render()
       // TODO: test camera movements
       Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
 
-      p.color = trace(r, std::shared_ptr<Shape>{});
+      p.color = trace(r, 1);
 
       // HDR to LDR
       //float c_sum = (p.color.r+ p.color.b + p.color.g)/3;
@@ -107,19 +107,18 @@ glm::mat4 Renderer::get_camera_matrix() const {
 };
 
 // test ray on intersection
-Color Renderer::trace(Ray const& r, std::shared_ptr<Shape> const& retrace) const {
+Color Renderer::trace(Ray const& r, float priority) const {
+  float epsilon = 0.0001;
   
   // Create a default hit point, which will have the info
   HitPoint hp{};
   std::shared_ptr<Shape> s;  
 
   for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
-    if (!(retrace) || (*it != retrace)) {
-      HitPoint result = (*it)->intersect(r);
-      if (result.hit && result.t < hp.t) {
-        hp = result;
-        s = *it;
-      }
+    HitPoint result = (*it)->intersect(r);
+    if (result.hit && result.t > epsilon && result.t < hp.t) {
+      hp = result;
+      s = *it;
     }
   }
 
@@ -131,7 +130,8 @@ Color Renderer::trace(Ray const& r, std::shared_ptr<Shape> const& retrace) const
   if (hp.hit && mat != nullptr) {
     if (mat->opacity < 1) {
       Color opaque = shade(s, hp) * mat->opacity; 
-      Color transparent = trace(Ray{hp.point, r.direction}, s) * 1;//(1 - mat->opacity);
+      glm::vec3 resulting_direction = r.direction;//glm::normalize(r.direction + glm::vec3{0.2,0.,0.1});
+      Color transparent = trace(Ray{hp.point, resulting_direction }, 1 - mat->opacity) * 1;//(1 - mat->opacity);
       return opaque + transparent;
     } else return shade(s, hp);
     //return mat->ka;
