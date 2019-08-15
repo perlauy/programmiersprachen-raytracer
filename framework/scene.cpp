@@ -253,7 +253,6 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
         }
 
       } 
-    // TODO: read last line with "render...." and return to references (?)
     }
 
     for(auto it = shapes.begin(); it != shapes.end(); ++it) (*it)->compute_world_transformation_inv_();
