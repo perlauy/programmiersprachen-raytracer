@@ -28,12 +28,12 @@ float Box::volume() const {
 
 HitPoint Box::intersect(Ray const& ray) const {
   Ray trans_ray = transform_ray(Shape::world_transformation_inv_, ray);
-  glm::vec3 central = minimum_ + (1.0f/2.0f) * (maximum_ - minimum_); 
-  glm::vec3 origin_to_central = central - ray.origin;
+  //glm::vec3 central = minimum_ + (1.0f/2.0f) * (maximum_ - minimum_); 
+  //glm::vec3 origin_to_central = central - ray.origin;
   HitPoint result{};
   for (int index = 0; index < 3; ++index) {
-	  if (ray.origin[index] > maximum_[index]
-		  || (ray.origin[index] > minimum_[index] && ray.direction[index] > 0)) {
+	  if (trans_ray.origin[index] > maximum_[index]
+		  || (trans_ray.origin[index] > minimum_[index] && trans_ray.direction[index] > 0)) {
 		  hit_test(result, trans_ray, maximum_[index], index);
 	  }
 	  else {
@@ -122,7 +122,7 @@ glm::vec3 Box::get_normal(glm::vec3 const& point) const {
   if (glm::length(result) == 0) std::cout << "möp";
   // inverse because of normal transformation
   result = transform_vector(glm::transpose(Shape::world_transformation_inv_), result);
-  std::cout << "[ " << result[0] << ", " << result[1] << ", " << result[2]  << " ]" << std::endl;
+  //std::cout << "[ " << result[0] << ", " << result[1] << ", " << result[2]  << " ]" << std::endl;
   return glm::normalize(result);
 }
 
