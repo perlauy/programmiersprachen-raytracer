@@ -16,7 +16,7 @@ define shape sphere gsphere 10 0 -50 5 green
 transform rbottom rotate 15 1 0 0
 transform rbottom rotate -50 0 1 0
 # light - from right above
-define light sun 100 700 0 .2 .5 .2 10
+define light sun -100 -700 0 .2 .5 .2 10
 define light behind 100 10 0 .2 .2 .6 10
 ambient .3 .3 .3
 # camera

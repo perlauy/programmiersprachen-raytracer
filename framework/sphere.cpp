@@ -33,36 +33,43 @@ std::ostream& Sphere::print(std::ostream& os) const {
   return os;
 }
 
-HitPoint Sphere::intersect(Ray const& ray) const {
+HitPoint Sphere::intersect(Ray const& original_ray) const {
 
-  glm::vec3 normalized_direction = glm::normalize(ray.direction);
+  Ray trans_ray = transform_ray(Shape::world_transformation_inv_, original_ray);
   float t = HUGE_VALF;
+  //glm::vec3 normalized_direction = glm::normalize(trans_ray.direction);
+  //float ratio = trans_ray.direction[0] / normalized_direction[0];
 
   bool is_intersected_distance = glm::intersectRaySphere(
-    ray.origin,
-    normalized_direction,
+    trans_ray.origin,
+    trans_ray.direction,
     center_,
     radius_ * radius_,
     t
   );
+
+  if (is_intersected_distance) std::cout << "Kugel";
   
-  glm::vec3 point = ray.origin + t * normalized_direction;
+  glm::vec3 resulting_point = trans_ray.origin + t * glm::normalize(trans_ray.direction);
 
   return HitPoint{
     is_intersected_distance,
     t,
     name_,
     material_,
-    point, // selbst berechnen (don't call twice)
-    ray.direction
+    transform_point(Shape::world_transformation_, resulting_point),
+    transform_vector(Shape::world_transformation_, trans_ray.direction)
   };
 }
 
-glm::vec3 Sphere::get_normal(glm::vec3 const& point) const {
-	return glm::normalize(glm::vec3{
+glm::vec3 Sphere::get_normal(glm::vec3 const& world_point) const {
+  glm::vec3 point = transform_point(Shape::world_transformation_inv_, world_point);
+	glm::vec3 normal = glm::normalize(glm::vec3{
 	  point[0] - center_[0],
 	  point[1] - center_[1],
 	  point[2] - center_[2]
 	});
+  std::cout <<"[ " << normal[0] << ", " << normal[1] << ", " << normal[2]  << " ]" << std::endl;
+  return glm::normalize(transform_vector(glm::transpose(Shape::world_transformation_), normal));
 }
 

@@ -8,6 +8,7 @@
 #include <shape.hpp>
 #include <sphere.hpp>
 #include <box.hpp>
+#include <color.hpp>
 #include <render_information.hpp>
 
 // Standard libraries

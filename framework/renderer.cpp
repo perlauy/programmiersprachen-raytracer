@@ -108,7 +108,7 @@ glm::mat4 Renderer::get_camera_matrix() const {
 
 // test ray on intersection
 Color Renderer::trace(Ray const& r, float priority) const {
-  float epsilon = 0.0001;
+  float epsilon = 0.01;
   
   // Create a default hit point, which will have the info
   HitPoint hp{};
@@ -116,7 +116,7 @@ Color Renderer::trace(Ray const& r, float priority) const {
 
   for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
     HitPoint result = (*it)->intersect(r);
-    if (result.hit && result.t > epsilon && result.t < hp.t) {
+    if (result.hit && result.t > epsilon && result.t < hp.t + epsilon) {
       hp = result;
       s = *it;
     }
@@ -137,7 +137,7 @@ Color Renderer::trace(Ray const& r, float priority) const {
     //return mat->ka;
   } else {
     // TODO: define background color    
-    return Color{0.0f,0.0f,0.0f};
+    return Color{1.0f,1.0f,0.6f};
   }
 
 };
@@ -154,15 +154,14 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
     // Get ray l and angle n_r 
     glm::vec3 l = glm::normalize(light_it->pos - hp.point);
-    //float angle normal,l
+    // float angle normal,l
     float angle = glm::angle(normal, l);
 
-
-    //glm::vec3 r = glm::reflect(l, normal);
+    // glm::vec3 r = glm::reflect(l, normal);
     glm::vec3 v = glm::normalize(-hp.direction);
 
     // (loop the objects and see if l intersects with another object)
-    bool visable = true;
+    // bool visable = true;
     float opaque_level = 0;
     for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
       if (*it != s) {
@@ -210,6 +209,7 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
     scene_.ambient.g * hp.material_->ka.g,
     scene_.ambient.b * hp.material_->ka.b
   };
+
   result += ambient_light;
 
   return result;
