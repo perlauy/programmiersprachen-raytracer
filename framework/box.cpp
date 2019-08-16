@@ -119,6 +119,7 @@ glm::vec3 Box::get_normal(glm::vec3 const& point) const {
     //std::cout << "5" << std::endl;
   };
   if (glm::length(result) == 0) std::cout << "möp";
+
   // inverse because of normal transformation
   result = transform_vector(glm::transpose(Shape::world_transformation_inv_), result);
   //std::cout << "[ " << result[0] << ", " << result[1] << ", " << result[2]  << " ]" << std::endl;
