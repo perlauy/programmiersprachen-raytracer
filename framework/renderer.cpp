@@ -127,20 +127,32 @@ Color Renderer::trace(Ray const& r, float priority) const {
   // TODO
   std::shared_ptr<Material> mat = hp.material_;
 
-
   if (hp.hit && mat != nullptr) {
     if (mat->opacity < 1) {
       Color opaque = shade(s, hp) * mat->opacity; 
-      glm::vec3 resulting_direction = r.direction;//glm::normalize(r.direction + glm::vec3{0.2,0.,0.1});
+      glm::vec3 normal = s->get_normal(hp.point);
+
+      float normal_ray_angle = 90 - glm::angle(-r.direction, normal);
+      // Difference between incoming and outgoing material? How to know? Now 1 as incoming always air
+      float refracted_angle = std::asin(1 * std::sin(normal_ray_angle) / mat->refractive_index);
+      glm::vec3 rotation_axis = glm::cross(r.direction, normal);
+      glm::mat4 rotation_matrix = glm::rotate(refracted_angle - normal_ray_angle, rotation_axis);
+
+      glm::vec3 resulting_direction = r.direction;
+
+      glm::vec4 refracted_direction{ r.direction, 1};
+      refracted_direction = rotation_matrix * refracted_direction; 
+
+      //glm::normalize(r.direction + glm::vec3{0.2,0.,0.1});
+
       Color transparent = trace(Ray{hp.point, resulting_direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
       return opaque + transparent;
     } else return shade(s, hp);
     //return mat->ka;
   } else {
     // TODO: define background color    
-    return Color{1.0f,1.0f,0.6f};
+    return Color{0.0f,0.0f,0.0f};
   }
-  } else return Color{0,0,0};
 
 };
 
