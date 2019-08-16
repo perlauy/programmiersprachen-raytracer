@@ -35,8 +35,8 @@ struct Material {
   Color kd{0.0f, 0.0f, 0.0f};
   Color ks{0.0f, 0.0f, 0.0f};
   float m = 0.0f;
-  float refractive_index = 0.0f;
-  float opacity = 0.0f;
+  float refractive_index = 1.0f;
+  float opacity = 1.0f;
 
 };
 

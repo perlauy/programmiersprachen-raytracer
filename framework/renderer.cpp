@@ -7,7 +7,6 @@
 // Renderer
 // -----------------------------------------------------------------------------
 #define _USE_MATH_DEFINES
-
 #include "renderer.hpp"
 
 Renderer::Renderer(unsigned w, unsigned h, std::string const& file, Scene const& s, Camera const& c) :
@@ -85,7 +84,7 @@ Ray Renderer::compute_camera_ray(Pixel const& p) const {
 Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const {
   glm::vec4 r_T{ r.direction[0], r.direction[1], r.direction[2], 1};
   r_T = matrix * r_T; 
-  Ray transformed_ray{r.origin, glm::vec3(r_T)};
+  Ray transformed_ray{r.origin, glm::normalize(glm::vec3(r_T))};
   return transformed_ray;
 };
 
@@ -112,53 +111,57 @@ Color Renderer::trace(Ray const& r, float priority) const {
   
   if (priority > 0.01) {
   // Create a default hit point, which will have the info
-  HitPoint hp{};
-  std::shared_ptr<Shape> s;  
+    HitPoint hp{};
+    std::shared_ptr<Shape> s;  
 
-  for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
-    HitPoint result = (*it)->intersect(r);
-    if (result.hit && result.t > epsilon && result.t < hp.t + epsilon) {
-      hp = result;
-      s = *it;
+    for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
+      HitPoint result = (*it)->intersect(r);
+      if (result.hit && result.t > epsilon && result.t < hp.t + epsilon) {
+        hp = result;
+        s = *it;
+      }
+    }
+
+    // Now that we know which object and which material is, calculate light
+    std::shared_ptr<Material> mat = hp.material_;
+
+    if (hp.hit && mat != nullptr) {
+      if (mat->opacity < 1) {
+        Color opaque = shade(s, hp) * mat->opacity; 
+        glm::vec3 normal = s->get_normal(hp.point);
+
+        float surface_ray_angle = glm::angle(r.direction, normal) - M_PI / 2;
+        
+        // if the angle between the incoming ray and the normal is greater than 90 degrees, then for convex shapes, the ray is incoming, else outgoing.
+        // TODO: add this property to hitpoint together with the normal, since it depends on the type of shape (triangles will be planes - no volume being traversed)
+
+        // Material where the medium is
+        // TODO: consider nested materials
+        float incoming_index = surface_ray_angle > 0 ? 1 : mat->refractive_index;
+        float outgoing_index = surface_ray_angle <= 0 ? 1 : mat->refractive_index;
+        
+        float refracted_angle = std::asin(incoming_index * std::sin(surface_ray_angle) / outgoing_index);
+        glm::vec3 rotation_axis = glm::normalize(glm::cross(r.direction, normal));
+        glm::mat4 rotation_matrix = glm::rotate(surface_ray_angle - refracted_angle, rotation_axis);
+
+        glm::vec4 refracted_direction{r.direction, 1};
+        refracted_direction = rotation_matrix * refracted_direction; 
+
+        //glm::normalize(r.direction + glm::vec3{0.2,0.,0.1});
+
+        Color transparent = trace(Ray{hp.point, glm::vec3(refracted_direction)}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
+        return opaque + transparent;
+      } else return shade(s, hp);
     }
   }
 
-  // Now that we know which object and which material is, calculate light
-  // TODO
-  std::shared_ptr<Material> mat = hp.material_;
-
-  if (hp.hit && mat != nullptr) {
-    if (mat->opacity < 1) {
-      Color opaque = shade(s, hp) * mat->opacity; 
-      glm::vec3 normal = s->get_normal(hp.point);
-
-      float normal_ray_angle = 90 - glm::angle(-r.direction, normal);
-      // Difference between incoming and outgoing material? How to know? Now 1 as incoming always air
-      float refracted_angle = std::asin(1 * std::sin(normal_ray_angle) / mat->refractive_index);
-      glm::vec3 rotation_axis = glm::cross(r.direction, normal);
-      glm::mat4 rotation_matrix = glm::rotate(refracted_angle - normal_ray_angle, rotation_axis);
-
-      glm::vec3 resulting_direction = r.direction;
-
-      glm::vec4 refracted_direction{ r.direction, 1};
-      refracted_direction = rotation_matrix * refracted_direction; 
-
-      //glm::normalize(r.direction + glm::vec3{0.2,0.,0.1});
-
-      Color transparent = trace(Ray{hp.point, resulting_direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
-      return opaque + transparent;
-    } else return shade(s, hp);
-    //return mat->ka;
-  } else {
-    // TODO: define background color    
-    return Color{0.0f,0.0f,0.0f};
-  }
+  return Color{0.0f,0.0f,0.0f};
 
 };
 
 // computes color out of object and hitpoint
 Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const {
-  // Do we simply add every light? It will be HDR, so we don't cap it?
+  
   Color result{0.0f, 0.0f, 0.0f};
 
   // Calculate for each light
@@ -227,4 +230,4 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
   result += ambient_light;
 
   return result;
-}
+};
