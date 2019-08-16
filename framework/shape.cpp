@@ -23,7 +23,7 @@ void Shape::scale(float mx, float my, float mz) {
 }
 
 void Shape::translate(float dx, float dy, float dz) {
-  world_transformation_ += glm::translate(glm::vec3{dx, dy, dz});
+  world_transformation_ *= glm::translate(glm::vec3{dx, dy, dz});
 }
 
 void Shape::rotate(float angle, float nx, float ny, float nz) {
@@ -31,7 +31,7 @@ void Shape::rotate(float angle, float nx, float ny, float nz) {
   // nx = nx/sum;
   // ny = ny/sum;
   // nz = nz/sum;
-  world_transformation_ += glm::rotate(angle, glm::vec3{nx, ny, nz});
+  world_transformation_ *= glm::rotate(angle, glm::vec3{nx, ny, nz});
 }
 
 void Shape::compute_world_transformation_inv_() {
