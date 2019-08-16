@@ -1,0 +1,38 @@
+# materials
+define	material	red	1	0	0	1	0	0	1	0	0	20
+define  material    	green   0   1   0   0   1   0   0   1   0   50	1.01	0.4
+define	material	ca	0	0	1	0	0	1	0	0	1	10	1	1
+define	material	cb	.5	.5	.5	.5	.5	.5	.5	.5	.5	10	1	1
+define	material	white	1	1	1	1	1	1	1	1	1	10	1	1
+# geometry
+#define shape box rbottom 0 -80 -200 100 80 -100 white
+#define shape sphere bsphere 0 0 -100 20 white
+define shape box rbottom -25 -5 -40 -15 5 -30 red
+define shape box s1 -25 -15 -50 0 -10 -25 ca
+define shape box s3 -25 -15 -75 0 -10 -50 cb
+define shape box s5 -25 -15 -100 0 -10 -75 ca
+define shape box s7 -25 -15 -125 0 -10 -100 cb
+define shape box s9 -25 -15 -150 0 -10 -125 ca
+
+define shape box s2 0 -15 -50 25 -10 -25 cb
+define shape box s4 0 -15 -75 25 -10 -50 ca
+define shape box s6 0 -15 -100 25 -10 -75 cb
+define shape box s8 0 -15 -125 25 -10 -100 ca
+define shape box s10 0 -15 -150 25 -10 -125 cb
+
+
+define shape sphere gsphere 7 -3 -40 5 green
+# transform name transfomation parameter
+#transform rbottom scale 2 4 2
+#transform rbottom translate 5 0 0
+#transform rbottom rotate 35 0 0 1
+transform rbottom rotate 15 1 0 0
+transform rbottom rotate -50 0 1 0
+# light - from right above
+define light sun 100 700 0 .2 .5 .2 10
+define light behind 100 10 0 .2 .2 .6 10
+ambient .3 .3 .3
+# camera
+define camera eye 45.0
+# ... and go
+render eye ./hallowelt.ppm 480 320

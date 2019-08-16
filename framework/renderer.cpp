@@ -139,17 +139,16 @@ Color Renderer::trace(Ray const& r, float priority) const {
         // TODO: consider nested materials
         float incoming_index = surface_ray_angle > 0 ? 1 : mat->refractive_index;
         float outgoing_index = surface_ray_angle <= 0 ? 1 : mat->refractive_index;
-        
+
         float refracted_angle = std::asin(incoming_index * std::sin(surface_ray_angle) / outgoing_index);
         glm::vec3 rotation_axis = glm::normalize(glm::cross(r.direction, normal));
         glm::mat4 rotation_matrix = glm::rotate(surface_ray_angle - refracted_angle, rotation_axis);
 
-        glm::vec4 refracted_direction{r.direction, 1};
-        refracted_direction = rotation_matrix * refracted_direction; 
+        glm::vec4 refracted_direction = rotation_matrix * glm::vec4{r.direction, 1}; 
 
         //glm::normalize(r.direction + glm::vec3{0.2,0.,0.1});
 
-        Color transparent = trace(Ray{hp.point, glm::vec3(refracted_direction)}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
+        Color transparent = trace(Ray{hp.point, r.direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
         return opaque + transparent;
       } else return shade(s, hp);
     }
@@ -180,15 +179,19 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
     // (loop the objects and see if l intersects with another object)
     // bool visable = true;
     float opaque_level = 0;
+    float light_amount = 1;
     for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
       if (*it != s) {
         Ray r{hp.point, l};
         HitPoint result = (*it)->intersect(r);
-        if (result.hit && result.t > 0) opaque_level += result.material_->opacity;
+        if (result.hit && result.t > 0.01) {
+          opaque_level += result.material_->opacity;
+          light_amount *= result.material_->opacity;
+        }
       }
     }
 
-    if (opaque_level < 1) {
+    if (light_amount > 0.001) {
 
       Color interim_result;
       
@@ -201,7 +204,7 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
           light_it->brightness * light_it->color.g * hp.material_->kd.g * std::cos(angle_l_normal),
           light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_l_normal)
         };
-        result += diffuse_light * (1-opaque_level);
+        result += diffuse_light * light_amount;
         // Phong
         // TODO: reflection. test
         //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
@@ -212,7 +215,7 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
           light_it->brightness * light_it->color.g * hp.material_->ks.g * ref_fact,
           light_it->brightness * light_it->color.b * hp.material_->ks.b * ref_fact
         };
-        result += reflect_light * (1-opaque_level);
+        result += reflect_light * light_amount;
       }
       //OPACITY
 
