@@ -140,7 +140,7 @@ Color Renderer::trace(Ray const& r, float priority) const {
     // TODO: define background color    
     return Color{1.0f,1.0f,0.6f};
   }
-  }
+  } else return Color{0,0,0};
 
 };
 
