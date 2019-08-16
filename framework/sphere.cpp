@@ -48,7 +48,7 @@ HitPoint Sphere::intersect(Ray const& original_ray) const {
     t
   );
 
-  if (is_intersected_distance) std::cout << "Kugel";
+ // if (is_intersected_distance) std::cout << "Kugel";
   
   glm::vec3 resulting_point = trans_ray.origin + t * ratio * trans_ray.direction;
 
@@ -69,7 +69,7 @@ glm::vec3 Sphere::get_normal(glm::vec3 const& world_point) const {
 	  point[1] - center_[1],
 	  point[2] - center_[2]
 	});
-  std::cout <<"[ " << normal[0] << ", " << normal[1] << ", " << normal[2]  << " ]" << std::endl;
+ // std::cout <<"[ " << normal[0] << ", " << normal[1] << ", " << normal[2]  << " ]" << std::endl;
   return glm::normalize(transform_vector(glm::transpose(Shape::world_transformation_inv_), normal));
 }
 
