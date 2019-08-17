@@ -194,7 +194,7 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
 
           std::cout << "Ambient found: " << ambient << std::endl;
 
-        } else if ("render" == identifier) {
+      } else if ("render" == identifier) {
         std::string camera_name;
         line_string_stream >> camera_name;
         Camera& camera = cameras.find(camera_name)->second;
@@ -260,7 +260,10 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
       } 
     }
 
-    for(auto it = shapes.begin(); it != shapes.end(); ++it) (*it)->compute_world_transformation_inv_();
+    for(auto it = shapes.begin(); it != shapes.end(); ++it) {
+      (*it)->compute_world_transformation_();
+      (*it)->compute_world_transformation_inv_();
+    }
     std::cout << " Generated inverse matrices " << std::endl;
 
     std::cout << "- file successfully loaded - " << std::endl << std::endl;

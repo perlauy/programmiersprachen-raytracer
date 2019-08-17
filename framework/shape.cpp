@@ -8,8 +8,12 @@ Shape::Shape() :
 
 Shape::Shape(std::string name, std::shared_ptr<Material> const& material) :
   name_{name},
-  material_(material)
+  material_(material),
+  scale_{1.0f,1.0f,1.0f},
+  rotate_{},
+  translate_{}
 {
+
 }
 
 Shape::~Shape() {}
@@ -19,19 +23,28 @@ std::string Shape::get_name() const {
 };
 
 void Shape::scale(float mx, float my, float mz) {
+  scale_ = glm::vec3{scale_[0] * mx, scale_[1] * my, scale_[2] * mz};
   world_transformation_ *= glm::scale(glm::vec3{mx, my, mz});
 }
 
 void Shape::translate(float dx, float dy, float dz) {
+  translate_ += glm::vec3{dx, dy, dz};
   world_transformation_ *= glm::translate(glm::vec3{dx, dy, dz});
 }
 
 void Shape::rotate(float angle, float nx, float ny, float nz) {
-  // float sum = nx + ny + nz;
-  // nx = nx/sum;
-  // ny = ny/sum;
-  // nz = nz/sum;
+  rotate_.push_back(glm::vec4{angle, nx, ny, nz});
   world_transformation_ *= glm::rotate(angle, glm::vec3{nx, ny, nz});
+}
+
+
+void Shape::compute_world_transformation_() {
+  glm::mat4 rotation_matrix{1};
+  for (auto it = rotate_.begin(); it != rotate_.end(); ++it) {
+    rotation_matrix *= glm::rotate((*it)[0], glm::vec3{(*it)[1], (*it)[2], (*it)[3]});
+  }
+
+  world_transformation_ = glm::translate(translate_) * rotation_matrix * glm::scale(scale_);
 }
 
 void Shape::compute_world_transformation_inv_() {

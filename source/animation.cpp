@@ -13,12 +13,10 @@ int main(int argc, char* argv[])
   std::string sdf_output_path = "../../output/animation/";
   unsigned const FPS = 24;
 
-  unsigned const image_width = 800;
-  unsigned const image_height = 600;
   std::string const output_path = "../../output/render/";  
-  std::string const output_image_name = "bild%d.ppm";
   
-  std::string sdf_path = "../../resources/scene.sdf";
+  // Original scene
+  std::string sdf_path = "../../resources/scene_animation.sdf";
   if (argc > 1) {
     sdf_path = argv[1];
   }
@@ -31,8 +29,8 @@ int main(int argc, char* argv[])
   for (int t = 0; t / FPS < 2.0f; ++t) {
     // ANIMATE STH
     Camera& camera = scene_loaded.cameras.find(camera_name)->second;
+    camera.position[2] -= t / 10.0f;
     camera.direction[0] -= t / 1000.0f;
-
     // Get next scene file name
     std::ostringstream os;
     os << std::setfill('0') << std::setw(5) << t;

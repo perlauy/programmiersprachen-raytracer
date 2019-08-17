@@ -32,6 +32,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 
 class Shape {
@@ -55,6 +56,7 @@ class Shape {
     virtual void translate(float dx, float dy, float dz);
     virtual void rotate(float degree, float nx, float ny, float nz);
 
+    virtual void compute_world_transformation_();
     virtual void compute_world_transformation_inv_();
 
     virtual std::ostream& print(std::ostream& os) const;
@@ -65,6 +67,9 @@ class Shape {
   protected:
     std::string name_;
     std::shared_ptr<Material> material_;
+    glm::vec3 scale_;
+    std::vector<glm::vec4> rotate_;
+    glm::vec3 translate_;
     glm::mat4 world_transformation_{1};
     glm::mat4 world_transformation_inv_{1};
 };

@@ -33,7 +33,6 @@ void Renderer::render()
       Ray simple_ray = compute_camera_ray(p); 
 
       // Multiply simple camera ray by camera matrix transform
-      // TODO: test camera movements
       Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
 
       p.color = trace(r); 
@@ -84,9 +83,13 @@ Ray Renderer::compute_camera_ray(Pixel const& p) const {
 
 // transformation of ray by given transformation matrix
 Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const {
-  glm::vec4 r_T{ r.direction[0], r.direction[1], r.direction[2], 1};
-  r_T = matrix * r_T; 
-  Ray transformed_ray{r.origin, glm::vec3(r_T)};
+  glm::vec4 transformed_direction{r.direction, 0};
+  transformed_direction = matrix * transformed_direction;
+
+  glm::vec4 transformed_origin{r.origin, 1};
+  transformed_origin = matrix * transformed_origin;
+  Ray transformed_ray{glm::vec3(transformed_origin), glm::vec3(transformed_direction)};
+  //std::cout << "camera: " << transformed_origin[0] << ",  " << transformed_origin[1] << ",  " << transformed_origin[2] << ",  " << transformed_origin[3] << std::endl;
   return transformed_ray;
 };
 
@@ -99,12 +102,13 @@ glm::mat4 Renderer::get_camera_matrix() const {
   vector_u = glm::length(vector_u) != 0 ? glm::normalize(vector_u) : vector_u;
   glm::vec3 vector_v = glm::cross(vector_u, vector_n);
   vector_v = glm::length(vector_v) != 0 ? glm::normalize(vector_v) : vector_v;
+  vector_n *= -1;
 
   glm::mat4 matrix{
-    {vector_u[0], vector_v[0], -vector_n[0], camera_->position[0]},
-    {vector_u[1], vector_v[1], -vector_n[1], camera_->position[1]},
-    {vector_u[2], vector_v[2], -vector_n[2], camera_->position[2]},
-    {0, 0, 0, 1}
+    {vector_u[0], vector_u[1], vector_u[2], 0},
+    {vector_v[0], vector_v[1], vector_v[2], 0},
+    {vector_n[0], vector_n[1], vector_n[2], 0},
+    {camera_->position[0], camera_->position[1], camera_->position[2], 1}
   };
 
   return matrix;

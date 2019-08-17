@@ -1,5 +1,4 @@
 #define _USE_MATH_DEFINES
-
 #include "sphere.hpp"
 
 
@@ -40,6 +39,13 @@ std::ofstream& Sphere::sdf_print(std::ofstream& ofs) const {
   << radius_ << " "
   << material_->name << " "
   << "\n";
+
+  ofs << "transform " << name_ << " translate " << translate_[0] << " " << translate_[1] << " " << translate_[2] << "\n";
+  for (auto it = rotate_.begin(); it != rotate_.end(); ++it) {
+    ofs << "transform " << name_ << " rotate " << (*it)[0] * 180 / M_PI << " " << (*it)[1] << " " << (*it)[2] << " " << (*it)[3] << "\n";
+  }
+  ofs << "transform " << name_ << " scale " << scale_[0] << " " << scale_[1] << " " << scale_[2] << "\n";
+
   return ofs;
 }
 
