@@ -25,6 +25,7 @@ checkerboard.ppm
 build
 cmake_out
 _bkp
+output
 
 # Project files
 *.sublime-project

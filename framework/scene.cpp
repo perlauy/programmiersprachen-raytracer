@@ -1,9 +1,10 @@
+#define _USE_MATH_DEFINES
+
 #include "scene.hpp"
 
 Scene open_scene(std::string const& filename, RenderInformation& r) {
 
-  std::cout << "- loading sdf - " << std::endl;
-  std::cout << filename << std::endl;
+  std::cout << "- loading sdf " << filename << " - " << std::endl;
 
   std::string line_buffer;
   std::ifstream scene_file(filename);
@@ -257,7 +258,6 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
         }
 
       } 
-    // TODO: read last line with "render...." and return to references (?)
     }
 
     for(auto it = shapes.begin(); it != shapes.end(); ++it) (*it)->compute_world_transformation_inv_();

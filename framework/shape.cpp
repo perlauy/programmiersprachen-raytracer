@@ -19,15 +19,11 @@ std::string Shape::get_name() const {
 };
 
 void Shape::scale(float mx, float my, float mz) {
-  world_transformation_[0][0] += mx;
-  world_transformation_[1][1] += my;
-  world_transformation_[2][2] += mz;
+  world_transformation_ *= glm::scale(glm::vec3{mx, my, mz});
 }
 
 void Shape::translate(float dx, float dy, float dz) {
-  world_transformation_[3][0] += dx;
-  world_transformation_[3][1] += dy;
-  world_transformation_[3][2] += dz;
+  world_transformation_ *= glm::translate(glm::vec3{dx, dy, dz});
 }
 
 void Shape::rotate(float angle, float nx, float ny, float nz) {
@@ -35,7 +31,7 @@ void Shape::rotate(float angle, float nx, float ny, float nz) {
   // nx = nx/sum;
   // ny = ny/sum;
   // nz = nz/sum;
-  world_transformation_ += glm::rotate(angle, glm::vec3{nx, ny, nz});
+  world_transformation_ *= glm::rotate(angle, glm::vec3{nx, ny, nz});
 }
 
 void Shape::compute_world_transformation_inv_() {
@@ -65,12 +61,16 @@ bool operator<(std::shared_ptr<Shape> const& lhs, std::shared_ptr<Shape> const& 
 
 Ray transform_ray(glm::mat4 const& mat , Ray const& ray) {
   glm::vec3 new_origin = transform_point(mat, ray.origin);
-  glm::vec3 new_direction = transform_point(mat, ray.direction);
-  return Ray{new_origin, glm::normalize(new_direction)};
+  glm::vec3 new_direction = transform_vector(mat, ray.direction);
+  return Ray{new_origin, new_direction};
 }
 
-glm::vec3 transform_point(glm::mat4 const& mat , glm::vec3 const& vector) {
-  glm::vec4 new_vector{vector, 1};
-  new_vector = mat * new_vector;
+glm::vec3 transform_point(glm::mat4 const& mat , glm::vec3 const& point) {
+  glm::vec4 new_point = mat * glm::vec4{point, 1};
+  return glm::vec3{new_point};
+}
+
+glm::vec3 transform_vector(glm::mat4 const& mat , glm::vec3 const& vector) {
+  glm::vec4 new_vector = mat * glm::vec4{vector, 0};
   return glm::vec3{new_vector};
 }
