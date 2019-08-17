@@ -51,6 +51,13 @@ HitPoint Sphere::intersect(Ray const& original_ray) const {
  // if (is_intersected_distance) std::cout << "Kugel";
   
   glm::vec3 resulting_point = trans_ray.origin + t * ratio * trans_ray.direction;
+  
+  glm::vec3 normal{};
+  bool incident = false;
+  if (is_intersected_distance) {
+    normal = get_normal(transform_point(Shape::world_transformation_, resulting_point));
+    incident = glm::angle(original_ray.direction, normal) > M_PI / 2;
+  }
 
   return HitPoint{
     is_intersected_distance,
@@ -58,7 +65,9 @@ HitPoint Sphere::intersect(Ray const& original_ray) const {
     name_,
     material_,
     transform_point(Shape::world_transformation_, resulting_point),
-    original_ray.direction//transform_vector(Shape::world_transformation_, trans_ray.direction)
+    original_ray.direction, //transform_vector(Shape::world_transformation_, trans_ray.direction)
+    normal,
+    incident
   };
 }
 

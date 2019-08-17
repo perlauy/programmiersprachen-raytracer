@@ -1,16 +1,6 @@
 #ifndef SHAPE_HPP
 #define SHAPE_HPP
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#include <glm/matrix.hpp>
-#include <glm/gtc/ulp.hpp>
-#include <glm/gtx/vector_angle.hpp>
-
-
 // Project files
 #include "color.hpp"
 #include "hit_point.hpp"
@@ -19,11 +9,14 @@
 
 // External libraries
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/ulp.hpp>
 #include <glm/gtx/intersect.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/matrix.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
 
 // Standard libraries
 #include <cmath>
