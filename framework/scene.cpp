@@ -81,6 +81,8 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
           materials.insert({material_name, new_material});
 
           std::cout << "Material created: " << material_name << std::endl;
+          std::cout << "ri: " << ri << std::endl;
+          std::cout << "o: " << o << std::endl;
 
 
         } else if ("shape" == identifier) {

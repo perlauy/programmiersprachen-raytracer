@@ -38,7 +38,7 @@ HitPoint Sphere::intersect(Ray const& original_ray) const {
   Ray trans_ray = transform_ray(Shape::world_transformation_inv_, original_ray);
   float t = HUGE_VALF;
   glm::vec3 normalized_direction = glm::normalize(trans_ray.direction);
-  float ratio = trans_ray.direction[0] / normalized_direction[0];
+  float ratio = glm::length(trans_ray.direction) / glm::length(normalized_direction);
 
   bool is_intersected_distance = glm::intersectRaySphere(
     trans_ray.origin,

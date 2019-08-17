@@ -137,8 +137,9 @@ Color Renderer::trace(Ray const& r, float priority) const {
 
         // Material where the medium is
         // TODO: consider nested materials
-        float incoming_index = surface_ray_angle > 0 ? 1 : mat->refractive_index;
-        float outgoing_index = surface_ray_angle <= 0 ? 1 : mat->refractive_index;
+        bool incoming = surface_ray_angle > 0;
+        float incoming_index = incoming ? 1 : mat->refractive_index;
+        float outgoing_index = !incoming ? 1 : mat->refractive_index;
 
         float refracted_angle = std::asin(incoming_index * std::sin(surface_ray_angle) / outgoing_index);
         glm::vec3 rotation_axis = glm::normalize(glm::cross(r.direction, normal));
@@ -146,12 +147,16 @@ Color Renderer::trace(Ray const& r, float priority) const {
 
         glm::vec4 refracted_direction = rotation_matrix * glm::vec4{r.direction, 1}; 
 
-        //glm::normalize(r.direction + glm::vec3{0.2,0.,0.1});
+        // Move the consecutive raycasting a bit to avoid re-intersecting the same point
+        // (solve transparent sphere noise)
+        glm::vec3 delta_new_hp = normal * (epsilon * (incoming ? -1 : 1));
 
-        Color transparent = trace(Ray{hp.point, r.direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
+        Color transparent = trace(Ray{hp.point + delta_new_hp, glm::vec3(refracted_direction)}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
         return opaque + transparent;
+        
       } else return shade(s, hp);
-    }
+    } 
+
   }
 
   return Color{0.0f,0.0f,0.0f};
@@ -178,20 +183,18 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
     // (loop the objects and see if l intersects with another object)
     // bool visable = true;
-    float opaque_level = 0;
     float light_amount = 1;
     for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
       if (*it != s) {
         Ray r{hp.point, l};
         HitPoint result = (*it)->intersect(r);
         if (result.hit && result.t > 0.01) {
-          opaque_level += result.material_->opacity;
-          light_amount *= result.material_->opacity;
+          light_amount *= (1 - result.material_->opacity);
         }
       }
     }
 
-    if (light_amount > 0.001) {
+    if (light_amount > 0.01) {
 
       Color interim_result;
       
