@@ -63,3 +63,15 @@ glm::vec3 Composite::get_normal(glm::vec3 const& world_point) const {
 	return {};
 };
 
+
+void Composite::add(std::shared_ptr<Shape> const& s) {
+  children_.push_back(s);
+};
+
+void Composite::remove(std::shared_ptr<Shape> const& s) {
+  auto it = children_.begin(); ; 
+  while ((*it)->get_name() != s->get_name()) ++it;
+  children_.erase(it);
+
+};
+

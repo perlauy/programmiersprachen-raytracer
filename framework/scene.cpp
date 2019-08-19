@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 
 #include "scene.hpp"
+#include <composite.hpp>
 
 // !!!
 // Creates a Material Dummy. Tested with others?
@@ -131,6 +132,27 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
             shapes.push_back(new_shape);
 
             std::cout << "Sphere created: " << shape_name << std::endl;
+         
+          } else if ("composite" == type) {
+            Composite composite{shape_name};
+
+            std::string next_child;
+
+            while (!line_string_stream.eof()) {
+              line_string_stream >> next_child;
+              
+              std::cout << "--> " << next_child << std::endl;
+
+              auto it = shapes.begin();
+              while((*it)->get_name() != next_child) ++it;
+              composite.add(*it);
+              shapes.erase(it);
+            }
+
+            auto new_shape = std::make_shared<Composite>(composite);
+            shapes.push_back(new_shape);
+
+            std::cout << "Composite created: " << shape_name << std::endl;
           }
 
 
@@ -213,7 +235,7 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
         line_string_stream >> shape_name;
 
         // maybe we should change to map for shapes because of searching
-        auto it = shapes.begin(); ; 
+        auto it = shapes.begin();
         while((*it)->get_name() != shape_name) ++it;
         std::shared_ptr<Shape> object = *it;
 
