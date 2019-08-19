@@ -1,17 +1,17 @@
 # materials
-define	material	red	1	0	0	1	0	0	1	0	0	20
-define  material    	green   0   1   0   0   1   0   0   1   0   50
-define	material	blue	0	0	1	0	0	1	0	0	1	10
-define	material	grey	.5	.5	.5	.5	.5	.5	.5	.5	.5	10
-define	material	white	1	1	1	1	1	1	1	1	1	10
+define  material  red 1 0 0 1 0 0 1 0 0 20 1 1
+define  material      green   0   1   0   0   1   0   0   1   0   90  1.01  0.4
+define	material	blue	0	0	1	0	0	1	0	0	1	10 1 1 
+define	material	grey	.5	.5	.5	.5	.5	.5	.5	.5	.5	10 1 1
+define	material	white	1	1	1	1	1	1	1	1	1	10 1 1
 # geometry
 define shape box rbottom -5 -5 -5 5 5 5 green
 define shape sphere bsphere 0 0 0 5 green
 # transform name transfomation parameter
 transform bsphere translate -10 0 -50
 #transform bsphere rotate -30 0.1 1 0.2
-transform bsphere rotate 45 0 0 1
-transform bsphere scale 1 2 1
+#transform bsphere rotate 45 0 0 1
+#transform bsphere scale 1 2 1
 #transform bsphere rotate 9 1 1
 transform rbottom translate 10 0 -50
 transform rbottom rotate -30 0.3 1 0.2
@@ -22,6 +22,8 @@ define shape box el1 -10 -12 -50 -5 -8 -45 white
 define shape sphere el2 0 -10 -48 3 red
 define shape composite root el1 el2
 transform root translate 10 0 0
+transform root rotate -90 0 0 1
+transform root scale 2 2 2
 # light - from right above
 define light sun 100 700 0 .2 .5 .2 10
 define light behind 100 10 0 .2 .2 .6 10

@@ -41,7 +41,7 @@ HitPoint Composite::intersect(Ray const& original_ray) const {
 	HitPoint result{};
 	Ray transformed_ray{
 	  transform_point(Shape::world_transformation_inv_, original_ray.origin),
-	  transform_vector(Shape::world_transformation_inv_, original_ray.direction)
+	  glm::normalize(transform_vector(Shape::world_transformation_inv_, original_ray.direction))
 	};
 
 	for (auto child : children_) {
@@ -50,6 +50,9 @@ HitPoint Composite::intersect(Ray const& original_ray) const {
 			result = hp;
 		};
 	};
+
+  result.point = transform_point(Shape::world_transformation_, result.point);
+  result.normal = glm::normalize(transform_vector(glm::transpose(Shape::world_transformation_inv_), result.normal));
 
 	return result;
 };
@@ -60,7 +63,7 @@ std::vector<std::shared_ptr<Shape>> Composite::get_children() const {
 
 glm::vec3 Composite::get_normal(glm::vec3 const& world_point) const {
 	// Remove this method, since it will be included in HitPoint struct
-	return {};
+	return {0.0f,1.0f,0.0f};
 };
 
 
