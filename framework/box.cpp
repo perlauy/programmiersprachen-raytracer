@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "box.hpp"
 
 
@@ -43,27 +44,8 @@ HitPoint Box::intersect(Ray const& ray) const {
   return result;
 }
 
-// HitPoint Box::intersect(Ray const& ray) const {
-//   Ray trans_ray = transform_ray(Shape::world_transformation_, ray);
-//   HitPoint result{};
-//   for (int i = 0; i < 6; ++i) {
-//     HitPoint dummy{};
-//     bool test;
-//     if ( i  < 3) {
-//       test = hit_test(dummy, trans_ray, minimum_[i % 3], i % 3);
-//     } else {
-//       test = hit_test(dummy, trans_ray, maximum_[i % 3], i % 3);
-//     }
-//     if (test && result.t > dummy.t) {result = dummy;
-//       //std::cout << "h";
-//     }
-//   }
-//   return result;
-// }
-
 bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) const {
   glm::vec3 normalized_direction = ray.direction;
-
   if (ray.direction[index] != 0) {
     // calculates t for bringing the resulting point to fixed value in index index
     float distance = (fixed_value - ray.origin[index]) / normalized_direction[index];
@@ -80,14 +62,20 @@ bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) con
       && (resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3] + epsilon)) {
 
       if (abs(distance) < abs(result.t)) {
- 
+   
+        glm::vec3 point = transform_point(Shape::world_transformation_, resulting_point);
+        glm::vec3 normal = get_normal(point);
+        bool incident = glm::angle(ray.direction, normal) > M_PI / 2;
+
         result = HitPoint{
           true,
           distance,
           name_,
           material_,
-          transform_point(Shape::world_transformation_, resulting_point),
-          transform_vector(Shape::world_transformation_, normalized_direction)
+          point,
+          transform_vector(Shape::world_transformation_, normalized_direction),
+          normal,
+          incident
         };
         return true;
       }

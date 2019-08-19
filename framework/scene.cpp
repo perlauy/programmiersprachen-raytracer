@@ -1,7 +1,5 @@
 #define _USE_MATH_DEFINES
-
 #include "scene.hpp"
-#include <composite.hpp>
 
 // !!!
 // Creates a Material Dummy. Tested with others?
@@ -63,8 +61,11 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
           line_string_stream >> ks_green;
           line_string_stream >> ks_blue;
 
-          float material_m;
+          float material_m, ri, o;
           line_string_stream >> material_m;
+          line_string_stream >> ri;
+          line_string_stream >> o;
+
        
       // Create the shared pointer to the new material
       // (MateriaL{}) to avoid constructor
@@ -73,13 +74,15 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
             Color { ka_red, ka_green, ka_blue },
             Color { kd_red, kd_green, kd_blue },
             Color { ks_red, ks_green, ks_blue },
-            material_m
+            material_m, ri, o
           );
           
       // Insert the material into the set
           materials.insert({material_name, new_material});
 
           std::cout << "Material created: " << material_name << std::endl;
+          std::cout << "ri: " << ri << std::endl;
+          std::cout << "o: " << o << std::endl;
 
 
         } else if ("shape" == identifier) {
@@ -235,6 +238,7 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
         line_string_stream >> shape_name;
 
         // maybe we should change to map for shapes because of searching
+        
         auto it = shapes.begin();
         while((*it)->get_name() != shape_name) ++it;
         std::shared_ptr<Shape> object = *it;

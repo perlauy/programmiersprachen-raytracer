@@ -7,7 +7,6 @@
 // Renderer
 // -----------------------------------------------------------------------------
 #define _USE_MATH_DEFINES
-
 #include "renderer.hpp"
 
 Renderer::Renderer(unsigned w, unsigned h, std::string const& file, Scene const& s, Camera const& c) :
@@ -36,7 +35,7 @@ void Renderer::render()
       // TODO: test camera movements
       Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
 
-      p.color = trace(r); 
+      p.color = trace(r, 1);
 
       // HDR to LDR
       //float c_sum = (p.color.r+ p.color.b + p.color.g)/3;
@@ -85,7 +84,7 @@ Ray Renderer::compute_camera_ray(Pixel const& p) const {
 Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const {
   glm::vec4 r_T{ r.direction[0], r.direction[1], r.direction[2], 1};
   r_T = matrix * r_T; 
-  Ray transformed_ray{r.origin, glm::vec3(r_T)};
+  Ray transformed_ray{r.origin, glm::normalize(glm::vec3(r_T))};
   return transformed_ray;
 };
 
@@ -107,92 +106,115 @@ glm::mat4 Renderer::get_camera_matrix() const {
 };
 
 // test ray on intersection
-Color Renderer::trace(Ray const& r) const {
+Color Renderer::trace(Ray const& r, float priority) const {
+  float epsilon = 0.01;
   
+  if (priority > 0.01) {
   // Create a default hit point, which will have the info
-  HitPoint hp{};
-  std::shared_ptr<Shape> s;  
+    HitPoint hp{};
+    std::shared_ptr<Shape> s;  
 
-  for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
-    HitPoint result = (*it)->intersect(r/* s->apply_world_transformation(r)*/);
-    if (result.hit && result.t < hp.t) {
-      hp = result;
-      s = *it;
+    for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
+      HitPoint result = (*it)->intersect(r);
+      if (result.hit && result.t > epsilon && result.t < hp.t + epsilon) {
+        hp = result;
+        s = *it;
+      }
     }
+
+    // Now that we know which object and which material is, calculate light
+    std::shared_ptr<Material> mat = hp.material_;
+
+    if (hp.hit && mat != nullptr) {
+      if (mat->opacity < 1) {
+        Color opaque = shade(s, hp) * mat->opacity; 
+
+        float surface_ray_angle = glm::angle(r.direction, hp.normal) - M_PI / 2;
+
+        // Material where the medium is
+        // TODO: consider nested materials
+        float incoming_index = hp.incident ? 1 : mat->refractive_index;
+        float outgoing_index = !hp.incident ? 1 : mat->refractive_index;
+
+        float refracted_angle = std::asin(incoming_index * std::sin(surface_ray_angle) / outgoing_index);
+        glm::vec3 rotation_axis = glm::normalize(glm::cross(r.direction, hp.normal));
+        glm::mat4 rotation_matrix = glm::rotate(surface_ray_angle - refracted_angle, rotation_axis);
+
+        glm::vec4 refracted_direction = rotation_matrix * glm::vec4{r.direction, 1}; 
+
+        // Move the consecutive raycasting a bit to avoid re-intersecting the same point
+        // (solve transparent sphere noise)
+        glm::vec3 delta_new_hp = hp.normal * (epsilon * (hp.incident ? -1 : 1));
+
+        Color transparent = trace(Ray{hp.point + delta_new_hp, glm::vec3(refracted_direction)}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
+        return opaque + transparent;
+        
+      } else return shade(s, hp);
+    } 
+
   }
 
-  // Now that we know which object and which material is, calculate light
-  // TODO
-  std::shared_ptr<Material> mat = hp.material_;
-
-
-  if (hp.hit && mat != nullptr) {
-    return shade(s, hp);
-    //return mat->ka;
-  } else {
-    // TODO: define background color    
-    return Color{1.0f,1.0f,0.6f};
-  }
+  return Color{0.0f,0.0f,0.0f};
 
 };
 
 // computes color out of object and hitpoint
 Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const {
-  // Do we simply add every light? It will be HDR, so we don't cap it?
+  
   Color result{0.0f, 0.0f, 0.0f};
 
   // Calculate for each light
   for(auto light_it = scene_.lights.begin(); light_it != scene_.lights.end(); ++light_it) {
 
-    glm::vec3 normal = s->get_normal(hp.point);
-
-    // Get ray l and angle n_r 
+    // Get ray l and angle n - r 
     glm::vec3 l = glm::normalize(light_it->pos - hp.point);
-    // float angle normal,l
-    float angle = glm::angle(normal, l);
-
-    // glm::vec3 r = glm::reflect(l, normal);
+    float angle = glm::angle(hp.normal, l);
     glm::vec3 v = glm::normalize(-hp.direction);
 
     // (loop the objects and see if l intersects with another object)
-    bool visable = true;
+
+    float light_amount = 1;
     for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
       if (*it != s) {
         Ray r{hp.point, l};
         HitPoint result = (*it)->intersect(r);
-        if (result.hit && result.t > 0) visable = false;
+        if (result.hit && result.t > 0.01) {
+          light_amount *= (1 - result.material_->opacity);
+        }
       }
     }
 
-    if (visable) {
+    if (light_amount > 0.01) {
+
+      float angle_l_normal = glm::angle(l, hp.normal);
       
-      // DIFFUSE LIGHT
-      // Ip * kd (l·n)
-      float angle_l_normal = glm::angle(l, normal);
       if (0 <= std::cos(angle_l_normal)) {
+        // DIFFUSE LIGHT
+        // Ip * kd (l·n)
         Color diffuse_light{
           light_it->brightness * light_it->color.r * hp.material_->kd.r * std::cos(angle_l_normal),
           light_it->brightness * light_it->color.g * hp.material_->kd.g * std::cos(angle_l_normal),
           light_it->brightness * light_it->color.b * hp.material_->kd.b * std::cos(angle_l_normal)
         };
-        result += diffuse_light;
-        // Phong
-        // TODO: reflection. test
-        //intensity[i] += light_it->brightness * hp.material_->ks * std::pow(std::cos(hp.material_->ks,v), m)
-        glm::vec3 reflect_vector = 2*glm::dot(normal,l)*normal - l;
+        result += diffuse_light * light_amount;
+
+        // REFLECTION
+        // Ip * ks (r·v)^m
+        glm::vec3 reflect_vector = 2*glm::dot(hp.normal,l)*hp.normal - l;
         float ref_fact = std::pow(glm::dot(reflect_vector, v), hp.material_->m);
         Color reflect_light{
           light_it->brightness * light_it->color.r * hp.material_->ks.r * ref_fact,
           light_it->brightness * light_it->color.g * hp.material_->ks.g * ref_fact,
           light_it->brightness * light_it->color.b * hp.material_->ks.b * ref_fact
         };
-        result += reflect_light;
+        result += reflect_light * light_amount;
       }
       
     }
   }
 
   // AMBIENT LIGHT
+  // Ia * ka
   Color ambient_light{
     scene_.ambient.r * hp.material_->ka.r,
     scene_.ambient.g * hp.material_->ka.g,
@@ -202,4 +224,4 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
   result += ambient_light;
 
   return result;
-}
+};

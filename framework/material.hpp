@@ -14,14 +14,16 @@ struct Material {
   }
   
   Material() {
-
   };
-  Material(std::string const& arg_name, Color const& arg_ka, Color const& arg_kd, Color const& arg_ks, float arg_m) : 
+  
+  Material(std::string const& arg_name, Color const& arg_ka, Color const& arg_kd, Color const& arg_ks, float arg_m, float ri, float o) : 
 	  name{arg_name},
 	  ka{arg_ka},
 	  kd{arg_kd},
 	  ks{arg_ks},
-	  m{arg_m}
+	  m{arg_m},
+    refractive_index{ri},
+    opacity{o}
   {};
 
   friend bool operator<(std::shared_ptr<Material> const& lhs, std::shared_ptr<Material> const& rhs) {
@@ -33,6 +35,8 @@ struct Material {
   Color kd{0.0f, 0.0f, 0.0f};
   Color ks{0.0f, 0.0f, 0.0f};
   float m = 0.0f;
+  float refractive_index = 1.0f;
+  float opacity = 1.0f;
 
 };
 
