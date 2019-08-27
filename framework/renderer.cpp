@@ -129,24 +129,36 @@ Color Renderer::trace(Ray const& r, float priority) const {
       if (mat->opacity < 1) {
         Color opaque = shade(s, hp) * mat->opacity; 
 
-        float surface_ray_angle = glm::angle(r.direction, hp.normal) - M_PI / 2;
+        // TODO: 
+
+        float normal_ray_angle, incoming_index, outgoing_index;
+        glm::vec3 rotation_axis;
+
+        if (hp.incident) {
+          normal_ray_angle = glm::angle(-r.direction, hp.normal);// - M_PI / 2;
+          incoming_index = 1;
+          outgoing_index = mat->refractive_index;
+          rotation_axis = glm::normalize(glm::cross(-r.direction, hp.normal));
+        } else {
+          normal_ray_angle = glm::angle(r.direction, hp.normal);// - M_PI / 2;
+          incoming_index = mat->refractive_index;
+          outgoing_index = 1;
+          rotation_axis = glm::normalize(glm::cross(r.direction, hp.normal));
+        }
+
+        float refracted_angle = std::asin(incoming_index * std::sin(normal_ray_angle) / outgoing_index);
+        glm::mat4 rotation_matrix = glm::rotate(normal_ray_angle - refracted_angle, rotation_axis);
 
         // Material where the medium is
         // TODO: consider nested materials
-        float incoming_index = hp.incident ? 1 : mat->refractive_index;
-        float outgoing_index = !hp.incident ? 1 : mat->refractive_index;
 
-        float refracted_angle = std::asin(incoming_index * std::sin(surface_ray_angle) / outgoing_index);
-        glm::vec3 rotation_axis = glm::normalize(glm::cross(r.direction, hp.normal));
-        glm::mat4 rotation_matrix = glm::rotate(surface_ray_angle - refracted_angle, rotation_axis);
-
-        glm::vec4 refracted_direction = rotation_matrix * glm::vec4{r.direction, 1}; 
+        glm::vec3 refracted_direction = transform_vector(rotation_matrix, r.direction); 
 
         // Move the consecutive raycasting a bit to avoid re-intersecting the same point
         // (solve transparent sphere noise)
         glm::vec3 delta_new_hp = hp.normal * (epsilon * (hp.incident ? -1 : 1));
 
-        Color transparent = trace(Ray{hp.point + delta_new_hp, glm::vec3(refracted_direction)}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
+        Color transparent = trace(Ray{hp.point + delta_new_hp, refracted_direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
         return opaque + transparent;
         
       } else return shade(s, hp);
