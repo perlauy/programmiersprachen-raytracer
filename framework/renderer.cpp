@@ -129,8 +129,6 @@ Color Renderer::trace(Ray const& r, float priority) const {
       if (mat->opacity < 1) {
         Color opaque = shade(s, hp) * mat->opacity; 
 
-        // TODO: 
-
         float normal_ray_angle, incoming_index, outgoing_index;
         glm::vec3 rotation_axis;
 
@@ -152,11 +150,11 @@ Color Renderer::trace(Ray const& r, float priority) const {
         // Material where the medium is
         // TODO: consider nested materials
 
-        glm::vec3 refracted_direction = transform_vector(rotation_matrix, r.direction); 
+        glm::vec3 refracted_direction = glm::normalize(transform_vector(rotation_matrix, r.direction)); 
 
         // Move the consecutive raycasting a bit to avoid re-intersecting the same point
         // (solve transparent sphere noise)
-        glm::vec3 delta_new_hp = hp.normal * (epsilon * (hp.incident ? -1 : 1));
+        glm::vec3 delta_new_hp = hp.normal * (hp.incident ? -0.0001f : 0.0001f);
 
         Color transparent = trace(Ray{hp.point + delta_new_hp, refracted_direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
         return opaque + transparent;
@@ -177,6 +175,7 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
   // Calculate for each light
   for(auto light_it = scene_.lights.begin(); light_it != scene_.lights.end(); ++light_it) {
+
 
     // Get ray l and angle n - r 
     glm::vec3 l = glm::normalize(light_it->pos - hp.point);
