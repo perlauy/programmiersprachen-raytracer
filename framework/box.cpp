@@ -65,7 +65,7 @@ bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) con
    
         glm::vec3 point = transform_point(Shape::world_transformation_, resulting_point);
         glm::vec3 normal = get_normal(point);
-        bool incident = glm::angle(ray.direction, normal) > M_PI / 2;
+        bool incident = glm::angle(glm::normalize(ray.direction), normal) > M_PI / 2;
 
         result = HitPoint{
           true,
