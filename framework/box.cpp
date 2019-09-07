@@ -45,7 +45,7 @@ HitPoint Box::intersect(Ray const& ray) const {
 }
 
 bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) const {
-  glm::vec3 normalized_direction = ray.direction;
+  glm::vec3 normalized_direction = glm::normalize(ray.direction);
   if (ray.direction[index] != 0) {
     // calculates t for bringing the resulting point to fixed value in index index
     float distance = (fixed_value - ray.origin[index]) / normalized_direction[index];
@@ -61,7 +61,7 @@ bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) con
       && (minimum_[(index + 2) % 3] - epsilon <= resulting_point[(index + 2) % 3])
       && (resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3] + epsilon)) {
 
-      if (abs(distance) < abs(result.t)) {
+      if (distance > epsilon && abs(distance) < abs(result.t)) {
    
         glm::vec3 point = transform_point(Shape::world_transformation_, resulting_point);
         glm::vec3 normal = get_normal(point);

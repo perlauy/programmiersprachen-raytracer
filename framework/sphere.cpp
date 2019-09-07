@@ -38,7 +38,7 @@ HitPoint Sphere::intersect(Ray const& original_ray) const {
   Ray trans_ray = transform_ray(Shape::world_transformation_inv_, original_ray);
   float t = HUGE_VALF;
   glm::vec3 normalized_direction = glm::normalize(trans_ray.direction);
-
+  
   bool is_intersected_distance = glm::intersectRaySphere(
     trans_ray.origin,
     normalized_direction,
@@ -53,17 +53,20 @@ HitPoint Sphere::intersect(Ray const& original_ray) const {
   
   glm::vec3 normal{};
   bool incident = false;
+  glm::vec3 world_point = transform_point(Shape::world_transformation_, resulting_point);
+  float world_t = glm::length(world_point - original_ray.origin);
+
   if (is_intersected_distance) {
-    normal = get_normal(transform_point(Shape::world_transformation_, resulting_point));
+    normal = get_normal(world_point);
     incident = glm::angle(glm::normalize(original_ray.direction), normal) > M_PI / 2;
   }
 
   return HitPoint{
     is_intersected_distance,
-    t,
+    world_t,
     name_,
     material_,
-    transform_point(Shape::world_transformation_, resulting_point),
+    world_point,
     original_ray.direction, //transform_vector(Shape::world_transformation_, trans_ray.direction)
     normal,
     incident

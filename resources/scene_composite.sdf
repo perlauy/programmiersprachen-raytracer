@@ -6,24 +6,21 @@ define	material	grey	.5	.5	.5	.5	.5	.5	.5	.5	.5	10 1 1
 define	material	white	1	1	1	1	1	1	1	1	1	10 1 1
 # geometry
 define shape box rbottom -5 -5 -5 5 5 5 green
-define shape sphere bsphere 0 0 0 5 green
+#define shape box bsphere -15 -5 -55 -5 5 -45 white
+define shape sphere bsphere -10 0 -50 5 green
 # transform name transfomation parameter
-transform bsphere translate -10 0 -50
-#transform bsphere rotate -30 0.1 1 0.2
-#transform bsphere rotate 45 0 0 1
-#transform bsphere scale 1 2 1
-#transform bsphere rotate 9 1 1
 transform rbottom translate 10 0 -50
 transform rbottom rotate -30 0.3 1 0.2
 transform rbottom scale 1 0.5 1
-#transform bsphere rotate 10 3 0 0
 # composite
 define shape box el1 -10 -12 -50 -5 -8 -45 white
 define shape sphere el2 0 -10 -48 3 red
 define shape composite root el1 el2
-transform root translate 10 0 0
-transform root rotate -90 0 0 1
-transform root scale 2 2 2
+transform root translate -5 0 0
+#transform root rotate -90 0 0 1
+transform root scale 1.2 .8 1
+#transform el1 scale 1.2 .8 1
+#transform el2 scale 1.2 .8 1
 # light - from right above
 define light sun 100 700 0 .2 .5 .2 10
 define light behind 100 10 0 .2 .2 .6 10
@@ -31,4 +28,4 @@ ambient .3 .3 .3
 # camera
 define camera eye 45.0
 # ... and go
-render eye ./hallowelt.ppm 480 320
+render eye ./20190907_composite_08.ppm 480 320

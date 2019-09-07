@@ -186,13 +186,13 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
 
     float light_amount = 1;
     for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
-      if (*it != s) {
+      //if (*it != s) { // what if composite??
         Ray r{hp.point, l};
         HitPoint result = (*it)->intersect(r);
         if (result.hit && result.t > 0.01) {
           light_amount *= (1 - result.material_->opacity);
         }
-      }
+      //}
     }
 
     if (light_amount > 0.01) {

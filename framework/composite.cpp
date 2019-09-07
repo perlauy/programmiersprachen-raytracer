@@ -39,10 +39,7 @@ std::ostream& Composite::print(std::ostream& os) const {
 
 HitPoint Composite::intersect(Ray const& original_ray) const {
 	HitPoint result{};
-	Ray transformed_ray{
-	  transform_point(Shape::world_transformation_inv_, original_ray.origin),
-	  glm::normalize(transform_vector(Shape::world_transformation_inv_, original_ray.direction))
-	};
+  Ray transformed_ray = transform_ray(Shape::world_transformation_inv_, original_ray);
 
 	for (auto child : children_) {
 		HitPoint hp = child->intersect(transformed_ray);
@@ -51,10 +48,21 @@ HitPoint Composite::intersect(Ray const& original_ray) const {
 		};
 	};
 
-  result.point = transform_point(Shape::world_transformation_, result.point);
-  result.normal = glm::normalize(transform_vector(glm::transpose(Shape::world_transformation_inv_), result.normal));
+  glm::vec3 world_point = transform_point(Shape::world_transformation_, result.point);
+  glm::vec3 world_normal = glm::normalize(transform_vector(glm::transpose(Shape::world_transformation_inv_), result.normal));
 
-	return result;
+  HitPoint world_result{
+    result.hit,
+    glm::length(world_point - original_ray.origin),
+    result.object,
+    result.material_,
+    world_point,
+    original_ray.direction,
+    world_normal, // The normal of the surface at that point (world coordinates)
+    result.incident // If
+  };
+
+	return world_result;
 };
 
 std::vector<std::shared_ptr<Shape>> Composite::get_children() const {
