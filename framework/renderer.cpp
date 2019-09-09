@@ -32,7 +32,7 @@ void Renderer::render()
       Ray simple_ray = compute_camera_ray(p); 
 
       // Multiply simple camera ray by camera matrix transform
-      Ray r = transform_ray_to_world(simple_ray, camera_transform_matrix);
+      Ray r = transform_ray(camera_transform_matrix, simple_ray);
 
       p.color = trace(r, 1);
 
@@ -80,17 +80,6 @@ Ray Renderer::compute_camera_ray(Pixel const& p) const {
   return r;
 };
 
-// transformation of ray by given transformation matrix
-Ray Renderer::transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const {
-  glm::vec4 transformed_direction{r.direction, 0};
-  transformed_direction = matrix * transformed_direction;
-
-  glm::vec4 transformed_origin{r.origin, 1};
-  transformed_origin = matrix * transformed_origin;
-  Ray transformed_ray{glm::vec3(transformed_origin), glm::vec3(transformed_direction)};
-  //std::cout << "camera: " << transformed_origin[0] << ",  " << transformed_origin[1] << ",  " << transformed_origin[2] << ",  " << transformed_origin[3] << std::endl;
-  return transformed_ray;
-};
 
 // generates transformation matrix
 glm::mat4 Renderer::get_camera_matrix() const {

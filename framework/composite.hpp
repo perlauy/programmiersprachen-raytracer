@@ -22,7 +22,8 @@ class Composite : public Shape {
     float volume() const override;
 
     std::ostream& print(std::ostream& os) const override;
-
+    std::ofstream& sdf_print(std::ofstream& ofs) const override;
+    
     HitPoint intersect(Ray const& ray) const override;
     glm::vec3 get_normal(glm::vec3 const& point) const override;
 

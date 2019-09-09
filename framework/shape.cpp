@@ -59,18 +59,18 @@ bool operator<(std::shared_ptr<Shape> const& lhs, std::shared_ptr<Shape> const& 
   return lhs->name_ < rhs->name_;
 };
 
-Ray transform_ray(glm::mat4 const& mat , Ray const& ray) {
+Ray transform_ray(glm::mat4 const& mat, Ray const& ray) {
   glm::vec3 new_origin = transform_point(mat, ray.origin);
   glm::vec3 new_direction = transform_vector(mat, ray.direction);
   return Ray{new_origin, new_direction};
 }
 
-glm::vec3 transform_point(glm::mat4 const& mat , glm::vec3 const& point) {
+glm::vec3 transform_point(glm::mat4 const& mat, glm::vec3 const& point) {
   glm::vec4 new_point = mat * glm::vec4{point, 1};
   return glm::vec3{new_point};
 }
 
-glm::vec3 transform_vector(glm::mat4 const& mat , glm::vec3 const& vector) {
+glm::vec3 transform_vector(glm::mat4 const& mat, glm::vec3 const& vector) {
   glm::vec4 new_vector = mat * glm::vec4{vector, 0};
   return glm::vec3{new_vector};
 }

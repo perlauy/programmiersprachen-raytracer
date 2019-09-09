@@ -35,7 +35,9 @@ int main(int argc, char* argv[])
     Color{0.0f, 0.0f, 0.0f},
     Color{0.9f, 1.0f, 1.0f},
     Color{0.5f, 0.5f, 0.5f},
-    1.0
+    1.0f,
+    1.4f,
+    0.4f
   );
 
   // Create shapes

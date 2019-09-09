@@ -37,6 +37,17 @@ std::ostream& Composite::print(std::ostream& os) const {
   return os;
 }
 
+std::ofstream& Composite::sdf_print(std::ofstream& ofs) const {
+  ofs << "define shape composite " << name_;
+  for (auto child : children_) {
+    ofs << " " << child->get_name();
+  };
+  ofs << "\n";
+  return ofs;
+}
+
+
+
 HitPoint Composite::intersect(Ray const& original_ray) const {
 	HitPoint result{};
   Ray transformed_ray = transform_ray(Shape::world_transformation_inv_, original_ray);

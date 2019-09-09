@@ -26,7 +26,7 @@ struct Material {
     << m.ka.r << " " << m.ka.g << " " << m.ka.b << " "
     << m.kd.r << " " << m.kd.g << " " << m.kd.b << " "
     << m.ks.r << " " << m.ks.g << " " << m.ks.b << " "
-    << m.m << "\n";
+    << m.m << " " << m.refractive_index << " " << m.opacity << "\n";
     return ofs;
   }
   
