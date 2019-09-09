@@ -56,6 +56,8 @@ namespace detail
 		typedef T value_type;
 		typedef int size_type;
 
+		// added by Ludwig (27. August)
+
 		//////////////////////////////////////
 		// Helper
 

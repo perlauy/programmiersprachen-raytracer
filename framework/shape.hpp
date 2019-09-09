@@ -70,5 +70,4 @@ std::ostream& operator<<(std::ostream& os, Shape const& s);
 Ray transform_ray(glm::mat4 const& mat , Ray const& ray);
 glm::vec3 transform_point(glm::mat4 const& mat , glm::vec3 const& point);
 glm::vec3 transform_vector(glm::mat4 const& mat , glm::vec3 const& vector);
-
 #endif

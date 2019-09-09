@@ -29,7 +29,8 @@ float Sphere::volume() const {
 std::ostream& Sphere::print(std::ostream& os) const {
   Shape::print(os);
   os << "Type: Sphere\n";
-  os << "Center: (" << center_[0] << ", " << center_[1] << ", " << center_[2] << ")" << "\tRadius: " << radius_ << "\n";
+  os << "Center: (" << center_[0] << ", " << center_[1] << ", " << center_[2] << ")" << "\t";
+  os << "Radius: " << radius_ << "\n" << "\n";
   return os;
 }
 

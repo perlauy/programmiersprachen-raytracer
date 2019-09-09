@@ -41,7 +41,7 @@ void Renderer::render()
       // HDR to LDR
       //float c_sum = (p.color.r+ p.color.b + p.color.g)/3;
       //p.color = p.color * ((c_sum)/(c_sum + 1));
-
+      
       // HDR to LDR
       p.color = Color{
       p.color.r / (p.color.r + 1),

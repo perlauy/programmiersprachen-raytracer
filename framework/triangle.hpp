@@ -3,7 +3,6 @@
 
 #include "shape.hpp"
 
-
 class Triangle : public Shape {
 
   public:
@@ -23,8 +22,9 @@ class Triangle : public Shape {
     glm::vec3 get_normal(glm::vec3 const& point) const override;
 
   private:
-    glm::vec3 center_;
-    float radius_;
+    glm::vec3 vert0_;
+    glm::vec3 vert1_;
+    glm::vec3 vert2_;
 
 };
 
