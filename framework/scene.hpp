@@ -3,6 +3,7 @@
 
 // Project files
 #include <camera.hpp>
+#include <composite.hpp>
 #include <light.hpp>
 #include <material.hpp>
 #include <shape.hpp>

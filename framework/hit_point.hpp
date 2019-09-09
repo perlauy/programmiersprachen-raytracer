@@ -26,6 +26,8 @@ struct HitPoint {
   std::shared_ptr<Material> material_ = nullptr;
   glm::vec3 point{};
   glm::vec3 direction{};
+  glm::vec3 normal{}; // The normal of the surface at that point (world coordinates)
+  bool incident; // If the ray hit the object and its origin is inside the object
 };
 
 #endif
