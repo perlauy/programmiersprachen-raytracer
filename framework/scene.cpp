@@ -278,9 +278,11 @@ Scene open_scene(std::string const& filename, RenderInformation& r) {
 }
 
 
-
-
-int write_scene(std::string const& filepath, Scene const& scene, RenderInformation const& render_info) {
+int write_scene(
+  std::string const& filepath,
+  Scene const& scene,
+  std::vector<std::string> const& transform_strings,
+  RenderInformation const& render_info) {
 
   std::cout << "- Writing sdf to - " << filepath << std::endl;
 
@@ -312,6 +314,11 @@ int write_scene(std::string const& filepath, Scene const& scene, RenderInformati
       scene_file << it->second;
     }
 
+    // Save transforms
+    for (auto it = transform_strings.begin(); it != transform_strings.end(); ++it) {
+      scene_file << *it << "\n";
+    }
+
     scene_file << "render "
     << render_info.camera->name << " " 
     << render_info.filename << " "
@@ -327,4 +334,8 @@ int write_scene(std::string const& filepath, Scene const& scene, RenderInformati
     return 1;
   }
 
+}
+
+int write_scene(std::string const& filepath, Scene const& scene, RenderInformation const& render_info) {
+  return write_scene(filepath, scene, std::vector<std::string>{}, render_info);
 }

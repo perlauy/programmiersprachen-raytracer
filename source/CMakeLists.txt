@@ -30,3 +30,12 @@ target_link_libraries(animation
   ${GLFW_LIBRARIES}
   ${FRAMEWORK_NAME}
   )
+
+# Build presentation
+add_executable(presentation
+  presentation.cpp)
+target_link_libraries(presentation
+  ${GLFW_LIBRARIES}
+  ${FRAMEWORK_NAME}
+  )
+

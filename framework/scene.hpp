@@ -46,5 +46,6 @@ Scene open_scene(std::string const& filename, RenderInformation& r);
   * @return int 0 if it was saved, 1 if some error was encountered
   */
 int write_scene(std::string const& filepath, Scene const& scene, RenderInformation const& render_info);
+int write_scene(std::string const& filepath, Scene const& scene, std::vector<std::string> const& transform_strings, RenderInformation const& render_info);
 
 #endif //#define SCENE_HPP
