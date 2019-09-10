@@ -32,8 +32,8 @@ int main(int argc, char* argv[])
   // Create materials
   auto white = std::make_shared<Material>(
     "white",
-    Color{1.0f, 1.0f, 1.0f},
-    Color{1.0f, 1.0f, 1.0f},
+    Color{50.0f, 50.0f, 50.0f},
+    Color{50.0f, 50.0f, 50.0f},
     Color{0.0f, 0.0f, 0.0f},
     0.0f,
     1.0f,
