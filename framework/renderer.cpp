@@ -203,8 +203,10 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp, float
     for(auto it = scene_.objects.begin(); it != scene_.objects.end(); ++it) {
       //if (*it != s) { // what if composite??
         Ray r{hp.point, l};
+        float distance_to_light = glm::length(light_it->pos - hp.point);
+
         HitPoint result = (*it)->intersect(r);
-        if (result.hit && result.t > 0.01) {
+        if (result.hit && result.t > 0.01 && result.t < distance_to_light) {
           light_amount *= (1 - result.material_->opacity);
         }
       //}
