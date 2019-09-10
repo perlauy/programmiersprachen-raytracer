@@ -32,10 +32,10 @@ target_link_libraries(tests
 #  )
 
 # Build presentation
-#add_executable(presentation
-#  presentation.cpp)
-#target_link_libraries(presentation
-#  ${GLFW_LIBRARIES}
-#  ${FRAMEWORK_NAME}
-#  )
+add_executable(presentation
+  presentation.cpp)
+target_link_libraries(presentation
+  ${GLFW_LIBRARIES}
+  ${FRAMEWORK_NAME}
+  )
 
