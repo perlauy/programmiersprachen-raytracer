@@ -61,11 +61,12 @@ bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) con
       && (minimum_[(index + 2) % 3] - epsilon <= resulting_point[(index + 2) % 3])
       && (resulting_point[(index + 2) % 3] <= maximum_[(index + 2) % 3] + epsilon)) {
 
-      if (distance > epsilon && abs(distance) < abs(result.t)) {
+      if (distance > epsilon && distance < result.t) {
    
         glm::vec3 point = transform_point(Shape::world_transformation_, resulting_point);
         glm::vec3 normal = get_normal(point);
-        bool incident = glm::angle(glm::normalize(ray.direction), normal) > M_PI / 2;
+        glm::vec3 world_ray = transform_vector(Shape::world_transformation_, normalized_direction);
+        bool incident = glm::angle(glm::normalize(world_ray), normal) > M_PI / 2;
 
         result = HitPoint{
           true,

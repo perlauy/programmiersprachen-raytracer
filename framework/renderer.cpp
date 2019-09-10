@@ -151,7 +151,7 @@ Color Renderer::trace(Ray const& r, float priority) const {
 
         // Move the consecutive raycasting a bit to avoid re-intersecting the same point
         // (solve transparent sphere noise)
-        glm::vec3 delta_new_hp = hp.normal * (hp.incident ? -0.0001f : 0.0001f);
+        glm::vec3 delta_new_hp = hp.normal * (hp.incident ? -0.001f : 0.001f);
 
         Color transparent = trace(Ray{hp.point + delta_new_hp, refracted_direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
         return opaque + transparent;
