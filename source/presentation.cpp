@@ -17,7 +17,7 @@
 int main(int argc, char* argv[])
 {
   unsigned const FPS = 24;
-  std::string const VERSION = "008";
+  std::string const VERSION = "009";
 
   std::string const output_path = "../../output/presentation/render/" + VERSION + "/";
   std::string sdf_output_path = "../../output/presentation/scene/" + VERSION + "/";
@@ -202,7 +202,7 @@ int main(int argc, char* argv[])
     transform_strings.push_back("transform opaque_ball translate 0 " + std::to_string(move_y_opaque) + " 0");
     transform_strings.push_back("transform glass_ball translate 0 " + std::to_string(move_y_glass) + " 0");
 
-    rotate_cube += t * 0.2;
+    rotate_cube += (t / FPS);
     transform_strings.push_back("transform cube translate 0 0 -200");
     transform_strings.push_back("transform cube rotate " + std::to_string(rotate_cube) + " 0 1 0");
     transform_strings.push_back("transform cube rotate 15 1 0 0");
