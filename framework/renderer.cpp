@@ -124,7 +124,7 @@ Color Renderer::trace(Ray const& r, float priority) const {
 
     if (hp.hit && mat != nullptr) {
       if (mat->opacity < 1) {
-        Color opaque = shade(s, hp) * mat->opacity; 
+        Color opaque = shade(s, hp, priority) * mat->opacity; 
 
         float normal_ray_angle, incoming_index, outgoing_index;
         glm::vec3 rotation_axis;
@@ -156,7 +156,7 @@ Color Renderer::trace(Ray const& r, float priority) const {
         Color transparent = trace(Ray{hp.point + delta_new_hp, refracted_direction}, priority * (1 - mat->opacity)) * (1 - mat->opacity);
         return opaque + transparent;
         
-      } else return shade(s, hp);
+      } else return shade(s, hp, priority);
     } 
 
   }
@@ -166,7 +166,7 @@ Color Renderer::trace(Ray const& r, float priority) const {
 };
 
 // computes color out of object and hitpoint
-Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const {
+Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp, float priority) const {
   
   Color result{0.0f, 0.0f, 0.0f};
 
@@ -219,7 +219,26 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
       }
       
     }
+
   }
+
+
+  glm::vec3 rotation_axis = glm::normalize(glm::cross(hp.direction, hp.normal));
+  float mirror_angle = glm::angle(hp.direction, hp.normal);
+  glm::mat4 rotation_matrix = glm::rotate(2 * mirror_angle, rotation_axis);
+  glm::vec3 mirror_direction = -glm::normalize(transform_vector(rotation_matrix, hp.direction)); 
+
+  float mirror_coefficient = (hp.material_->ks.r + hp.material_->ks.g  +hp.material_->ks.b) / 3.0f; 
+
+  glm::vec3 delta_new_hp = glm::vec3{};//hp.normal * (hp.incident ? -0.0001f : 0.0001f);
+
+  Color mirror_color = trace(Ray{hp.point + delta_new_hp, mirror_direction}, priority * mirror_coefficient);
+
+  result += Color{
+    mirror_color.r * hp.material_->ks.r * scene_.ambient.r,
+    mirror_color.g * hp.material_->ks.g * scene_.ambient.g,
+    mirror_color.b * hp.material_->ks.b * scene_.ambient.b 
+  };
 
   // AMBIENT LIGHT
   // Ia * ka
@@ -228,7 +247,7 @@ Color Renderer::shade(std::shared_ptr<Shape> const& s, HitPoint const& hp) const
     scene_.ambient.g * hp.material_->ka.g,
     scene_.ambient.b * hp.material_->ka.b
   };
-
+  
   result += ambient_light;
 
   return result;

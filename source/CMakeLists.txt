@@ -24,18 +24,18 @@ target_link_libraries(tests
   )
 
 # Build animation
-add_executable(animation
-  animation.cpp)
-target_link_libraries(animation
-  ${GLFW_LIBRARIES}
-  ${FRAMEWORK_NAME}
-  )
+#add_executable(animation
+#  animation.cpp)
+#target_link_libraries(animation
+#  ${GLFW_LIBRARIES}
+#  ${FRAMEWORK_NAME}
+#  )
 
 # Build presentation
-add_executable(presentation
-  presentation.cpp)
-target_link_libraries(presentation
-  ${GLFW_LIBRARIES}
-  ${FRAMEWORK_NAME}
-  )
+#add_executable(presentation
+#  presentation.cpp)
+#target_link_libraries(presentation
+#  ${GLFW_LIBRARIES}
+#  ${FRAMEWORK_NAME}
+#  )
 
