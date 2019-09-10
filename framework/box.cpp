@@ -55,7 +55,7 @@ bool Box::hit_test(HitPoint& result, Ray& ray, float fixed_value, int index) con
     // Comparison having problems with float appreciation. Approx?
     // the denugger shows 2.0000048 > 2.000000...
 
-    float epsilon = 0.01;
+    float epsilon = 0.00001;
     if ((minimum_[(index + 1) % 3] - epsilon <= resulting_point[(index + 1) % 3]) 
       && (resulting_point[(index + 1) % 3] <= maximum_[(index + 1) % 3] + epsilon)
       && (minimum_[(index + 2) % 3] - epsilon <= resulting_point[(index + 2) % 3])

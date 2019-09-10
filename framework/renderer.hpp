@@ -60,6 +60,7 @@ private:
   std::shared_ptr<Camera> camera_;
 
   Ray compute_camera_ray(Pixel const& p) const;
+  std::vector<Ray> compute_camera_rays(Pixel const& p, float deviation) const;
   Color trace(Ray const& r, float priority) const;
   Ray transform_ray_to_world(Ray const& r, glm::mat4 const& matrix) const;
   glm::mat4 get_camera_matrix() const;

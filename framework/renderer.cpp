@@ -29,13 +29,19 @@ void Renderer::render()
     for (unsigned x = 0; x < width_; ++x) {
       Pixel p(x,y);
       // Get a ray according to camera world
-      Ray simple_ray = compute_camera_ray(p); 
+      std::vector<Ray> rays = compute_camera_rays(p, 0.3);
+
 
       // Multiply simple camera ray by camera matrix transform
-      Ray r = transform_ray(camera_transform_matrix, simple_ray);
+      // TODO: test camera movements
+      for (auto simple_ray : rays) {
 
-      p.color = trace(r, 1);
+        Ray r = transform_ray(camera_transform_matrix, simple_ray);
 
+        p.color += trace(r, 1); 
+      }
+
+      p.color = p.color * (1.0f/9.0f);
       // HDR to LDR
       //float c_sum = (p.color.r+ p.color.b + p.color.g)/3;
       //p.color = p.color * ((c_sum)/(c_sum + 1));
@@ -78,6 +84,18 @@ Ray Renderer::compute_camera_ray(Pixel const& p) const {
   glm::vec3 direction{p.x - (width_ / 2.0f), p.y - (height_ / 2.0f), -fov_distance};
   Ray r{glm::vec3{0,0,0}, glm::normalize(direction)};
   return r;
+}
+// computes the rays from eye to pixel
+std::vector<Ray> Renderer::compute_camera_rays(Pixel const& p, float deviation) const {
+  std::vector<Ray> rarr{}; 
+  for (int x = -1; x <= 1; x++) {
+    for (int y = -1; y <= 1; y++) {
+      float fov_distance = (width_ / 2.0f) / std::tan(camera_.fov_x * M_PI / 360.0f);
+      glm::vec3 direction{p.x + x*deviation - (width_ / 2.0f) , p.y + y*deviation - (height_ / 2.0f), -fov_distance};
+      rarr.push_back(Ray{camera_.position, glm::normalize(direction)});
+      }
+    }
+  return rarr;
 };
 
 
