@@ -7,3 +7,6 @@ There are also theme-focused sdf:
 
 Composite:
 /resource/scene_composite.sdf
+
+Refraction:
+/resource/scene_refraction.sdf
