@@ -42,6 +42,7 @@ public:
   Renderer(unsigned w, unsigned h, std::string const& file, Scene const& s, std::shared_ptr<Camera> const& c);
 
   void render();
+  void render(bool anti_alias);
   void write(Pixel const& p);
 
   inline std::vector<Color> const& color_buffer() const
