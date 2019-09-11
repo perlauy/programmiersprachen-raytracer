@@ -1,0 +1,30 @@
+# materials
+define	material	red	1	0	0	1	0	0	1	0	0	20 1 1
+define  material    	green   0   1   0   0   1   0   0   1   0   90	1.5	0.4
+define	material	ca	0	0	1	0	0	1	0	0	1	10	1	1
+define	material	cb	.5	.5	.5	.5	.5	.5	.5	.5	.5	10	1	1
+define	material	white	1	1	1	1	1	1	1	1	1	10	1	1
+# geometry
+define shape box s1 -25 -15 -50 0 -10 -25 ca
+define shape box s3 -25 -15 -75 0 -10 -50 cb
+define shape box s5 -25 -15 -100 0 -10 -75 ca
+define shape box s7 -25 -15 -125 0 -10 -100 cb
+define shape box s9 -25 -15 -150 0 -10 -125 ca
+define shape box s2 0 -15 -50 25 -10 -25 cb
+define shape box s4 0 -15 -75 25 -10 -50 ca
+define shape box s6 0 -15 -100 25 -10 -75 cb
+define shape box s8 0 -15 -125 25 -10 -100 ca
+define shape box s10 0 -15 -150 25 -10 -125 cb
+define shape box boxtest -14 -18 -60 -6 2 -42 red
+define shape sphere gsphere 7 -3 -40 5 white
+# transform name transfomation parameter
+transform gsphere scale 1.5 1.2 1
+# light - from right above
+define light sun 0 700 0 .2 .5 .2 10
+#define light right 200 -5 -45 .2 .2 .6 10
+define light center 0 -12 -50 .2 .2 .6 10
+ambient .3 .3 .3
+# camera
+define camera eye 45.0 0 0 0 0 0 -1 0 1 0 
+# ... and go
+render eye ./fix_light_02_anit_alias.ppm 480 320
