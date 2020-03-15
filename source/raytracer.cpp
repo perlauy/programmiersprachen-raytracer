@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
   //create separate thread to see updates of pixels while rendering
   //std::thread render_thread([&renderer]() {renderer.render();});
 
-  renderer.render();
+  renderer.render(true);
 
   Window window{{info.width, info.height}};
 

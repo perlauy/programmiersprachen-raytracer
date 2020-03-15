@@ -17,6 +17,7 @@ define shape box s8 0 -15 -125 25 -10 -100 ca
 define shape box s10 0 -15 -150 25 -10 -125 cb
 define shape box boxtest -14 -18 -60 -6 2 -42 red
 define shape sphere gsphere 7 -3 -40 5 white
+define shape sphere floatsphere 0 2 -50 4.5 green
 # transform name transfomation parameter
 transform gsphere scale 1.5 1.2 1
 # light - from right above
@@ -25,6 +26,6 @@ define light sun 0 700 0 .2 .5 .2 10
 define light center 0 -12 -50 .2 .2 .6 10
 ambient .3 .3 .3
 # camera
-define camera eye 45.0 0 0 0 0 0 -1 0 1 0 
+define camera eye 45.0 0 -1 4 0 0 -1 0 1 0 
 # ... and go
-render eye ./fix_light_02_anit_alias.ppm 480 320
+render eye ./billboard.ppm 1360 765
